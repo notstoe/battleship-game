@@ -49,7 +49,7 @@ describe("testing dmg to a ship of length 3", () => {
 		});
 	});
 
-	it("returns a sunkShip with all blocks hit", () => {
+	it("returns a sunkShip when all blocks are hit", () => {
 		expect(fakeState.takeHit(1)).toEqual({
 			shipBlocks: [{ isHit: true }, { isHit: true }, { isHit: true }],
 			isSunk: true,
