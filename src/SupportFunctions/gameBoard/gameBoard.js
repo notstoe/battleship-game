@@ -14,27 +14,27 @@ export default function gameBoard() {
 	}
 
 	function addShip(posI, posJ, orientation, shipBlocks) {
-		let newBoard = JSON.parse(JSON.stringify(board));
+		let newBoard = JSON.parse(JSON.stringify(getBoard()));
 
-		//iterates through the newBoard 10x10
+		// checks for placing ships off the grid
+		if (posJ + shipBlocks[0].length > 9) return null;
 
-		for (let i = 0; i < 10; i++) {
-			let shipIndex = 0;
-
-			for (let j = 0; j < 10; j++) {
-				if (i === posI) {
-					if (posJ <= j && j < posJ + shipBlocks[0].length) {
-						//only falls here for position of adding ship + its length and pushes shipBlocks Array into it
-						newBoard[i][j] = {
-							wasShot: false,
-							shipBlock: shipBlocks[shipIndex],
-						};
-						//increments the shipBlocks Array Index
-						shipIndex++;
-					}
-				}
-			}
+		// checks for existing ships
+		for (let j = posJ; j < posJ + shipBlocks[0].length; j++) {
+			if ("shipBlock" in newBoard[posI][j]) return null;
 		}
+
+		//iterates through the ship position horizontally in newBoard(10x10) + its length
+		let shipIndex = 0;
+		for (let j = posJ; j < posJ + shipBlocks[0].length; j++) {
+			newBoard[posI][j] = {
+				wasShot: false,
+				shipBlock: shipBlocks[shipIndex],
+			};
+			//increments the shipBlocks Array Index
+			shipIndex++;
+		}
+		board = newBoard;
 		return newBoard;
 	}
 

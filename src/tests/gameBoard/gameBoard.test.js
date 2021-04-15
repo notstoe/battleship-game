@@ -23,25 +23,15 @@ describe("getBoard() structure and usage", () => {
 	});
 });
 
-describe("addShip() usage", () => {
+describe("addShip() usage horizontally", () => {
 	const fakeBoard = gameBoard();
-	const shipLength = 3;
-	const destroyer = Ship(shipLength);
+	const destroyer = Ship(3);
+	const submarine = Ship(2);
 
 	it("addShip() available in GameBoard() return", () => {
 		expect(fakeBoard).toMatchObject({
 			addShip: expect.any(Function),
 		});
-	});
-
-	it("addShip(i, j, x) returns new board table (10 rows)", () => {
-		expect(fakeBoard.addShip(2, 3, "x", destroyer.shipBlocks)).toHaveLength(10); // 10 rows
-	});
-
-	it("addShip(i, j, x) returns newBoard table (10 columns / row)", () => {
-		expect(fakeBoard.addShip(2, 3, "x", destroyer.shipBlocks)[5]).toHaveLength(
-			10
-		); // 10 columns
 	});
 
 	it("addShip(2, 3, x, 3) returns newBoard with ship in the right coords horizontally", () => {
@@ -54,8 +44,16 @@ describe("addShip() usage", () => {
 		}
 	});
 
-	it("no shipBlocks in the wrong columns before", () => {
-		const newBoard = fakeBoard.addShip(2, 3, "x", destroyer.shipBlocks);
+	it("board was saved as newBoard table with 10 rows", () => {
+		expect(fakeBoard.getBoard()).toHaveLength(10); // 10 rows
+	});
+
+	it("aboard was saved as newBoard table with 10 columns in a row)", () => {
+		expect(fakeBoard.getBoard()[5]).toHaveLength(10); // 10 columns
+	});
+
+	it("no shipBlocks in the wrong columns before coords", () => {
+		const newBoard = fakeBoard.getBoard();
 		for (let j = 0; j < 3; j++) {
 			expect(newBoard[2][j]).not.toEqual({
 				wasShot: false,
@@ -64,8 +62,8 @@ describe("addShip() usage", () => {
 		}
 	});
 
-	it("no shipBlocks in the wrong columns after", () => {
-		const newBoard = fakeBoard.addShip(2, 3, "x", destroyer.shipBlocks);
+	it("no shipBlocks in the wrong columns after coords", () => {
+		const newBoard = fakeBoard.getBoard();
 		for (let j = 6; j < 10; j++) {
 			expect(newBoard[2][j]).not.toEqual({
 				wasShot: false,
@@ -74,8 +72,8 @@ describe("addShip() usage", () => {
 		}
 	});
 
-	it("no shipBlocks in the wrong rows before", () => {
-		const newBoard = fakeBoard.addShip(2, 3, "x", destroyer.shipBlocks);
+	it("no shipBlocks in the wrong rows before coords", () => {
+		const newBoard = fakeBoard.getBoard();
 		for (let i = 0; i < 2; i++) {
 			expect(newBoard[i][3]).not.toEqual({
 				wasShot: false,
@@ -84,8 +82,8 @@ describe("addShip() usage", () => {
 		}
 	});
 
-	it("no shipBlocks in the wrong rows after", () => {
-		const newBoard = fakeBoard.addShip(2, 3, "x", destroyer.shipBlocks);
+	it("no shipBlocks in the wrong rows after coords", () => {
+		const newBoard = fakeBoard.getBoard();
 		for (let i = 3; i < 10; i++) {
 			expect(newBoard[i][3]).not.toEqual({
 				wasShot: false,
@@ -104,4 +102,24 @@ describe("addShip() usage", () => {
 			});
 		}
 	});
+
+	it("fails to add a ship in the same coordinates as another one", () => {
+		const newBoard = fakeBoard.addShip(2, 5, "x", submarine.shipBlocks);
+
+		expect(newBoard).toEqual(null);
+	});
+
+	it("fails to add a ship if coords are off the 10x10 grid", () => {
+		const newBoard = fakeBoard.addShip(3, 9, "x", submarine.shipBlocks);
+
+		expect(newBoard).toEqual(null);
+	});
+});
+
+describe("addShip() usage vertically", () => {
+	const fakeBoard = gameBoard();
+	const destroyer = Ship(3);
+	const submarine = Ship(2);
+
+	it("bakjsdkbjasd", () => {});
 });
