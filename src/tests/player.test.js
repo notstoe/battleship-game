@@ -9,6 +9,7 @@ describe("player() factory Usage", () => {
 			getName: expect.any(Function),
 			incrementScore: expect.any(Function),
 			setName: expect.any(Function),
+			resetScore: expect.any(Function),
 		});
 	});
 
@@ -29,5 +30,11 @@ describe("player() factory Usage", () => {
 		player1.setName("Tonin");
 
 		expect(player1.getName()).toMatch("Tonin");
+	});
+
+	it("player resetScore resets the score to 0", () => {
+		player1.resetScore();
+
+		expect(player1.getScore()).toBe(0);
 	});
 });
