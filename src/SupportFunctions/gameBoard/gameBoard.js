@@ -10,11 +10,11 @@ export default function gameBoard() {
 	}
 
 	function getBoard() {
-		return board;
+		return JSON.parse(JSON.stringify(board));
 	}
 
 	function addShip(posI, posJ, orientation, shipBlocks) {
-		let newBoard = JSON.parse(JSON.stringify(getBoard()));
+		let newBoard = board;
 		let shipIndex = 0;
 
 		switch (orientation) {
@@ -61,13 +61,35 @@ export default function gameBoard() {
 				break;
 
 			default:
-				console.alert("Oops! Something went wrong!");
+				console.warn("Oops! Something went wrong!");
 				break;
 		}
 
-		board = newBoard;
+		//FIXME - attribute newBoard to state variable on Context later
 		return newBoard;
 	}
 
-	return { getBoard, addShip };
+	function makeShot(posI, posJ) {
+		let shotInfo;
+
+		if ("shipBlock" in board[posI][posJ]) {
+			if (board[posI][posJ].wasShot === true) return null; //when those coords were already shot
+
+			board[posI][posJ].wasShot = true;
+			board[posI][posJ].shipBlock.isHit = true;
+			shotInfo = {
+				shipLength: board[posI][posJ].shipBlock.length,
+				isHit: board[posI][posJ].shipBlock.isHit,
+			};
+		} else {
+			if (board[posI][posJ].wasShot === true) return null; //when those coords were already shot
+
+			board[posI][posJ].wasShot = true;
+			shotInfo = "water";
+		}
+
+		return shotInfo;
+	}
+
+	return { getBoard, addShip, makeShot };
 }

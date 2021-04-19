@@ -154,3 +154,46 @@ describe("addShip() usage vertically", () => {
 		expect(newBoard).toEqual(null);
 	});
 });
+
+describe("makeShot(posI, posJ) usage", () => {
+	const fakeBoard = gameBoard();
+
+	const carrier = Ship(5);
+
+	// placing a ship to shoot it afterwards
+
+	fakeBoard.addShip(5, 6, "y", carrier.shipBlocks);
+
+	it("makeShot(posI, posJ) available in GameBoard() return", () => {
+		expect(fakeBoard).toMatchObject({
+			makeShot: expect.any(Function),
+		});
+	});
+
+	it("makeShot returns water when not hitting a ship", () => {
+		expect(fakeBoard.makeShot(1, 3)).toEqual("water");
+	});
+
+	it("first shot in the water saved on the board", () => {
+		expect(fakeBoard.getBoard()[1][3]).toEqual({ wasShot: true });
+	});
+
+	it("makeShot returns info obj when hitting a ship", () => {
+		expect(fakeBoard.makeShot(6, 6)).toEqual({ shipLength: 5, isHit: true });
+	});
+
+	it("first shot in a ship saved on the board", () => {
+		expect(fakeBoard.getBoard()[6][6]).toEqual({
+			wasShot: true,
+			shipBlock: { length: 5, isHit: true },
+		});
+	});
+
+	it("second shot in a water coord already hit, returns null", () => {
+		expect(fakeBoard.makeShot(1, 3)).toEqual(null);
+	});
+
+	it("second shot in a ship coord already hit, returns null", () => {
+		expect(fakeBoard.makeShot(6, 6)).toEqual(null);
+	});
+});
