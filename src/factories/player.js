@@ -17,5 +17,10 @@ export default function player(name) {
 	function incrementScore() {
 		score++;
 	}
-	return { getName, getScore, incrementScore, setName };
+
+	function resetScore() {
+		score = 0;
+	}
+
+	return { getName, getScore, incrementScore, setName, resetScore };
 }
