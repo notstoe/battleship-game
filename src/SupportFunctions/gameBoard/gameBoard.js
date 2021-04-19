@@ -14,7 +14,6 @@ export default function gameBoard() {
 	}
 
 	function addShip(posI, posJ, orientation, shipBlocks) {
-		let newBoard = board;
 		let shipIndex = 0;
 
 		switch (orientation) {
@@ -24,13 +23,13 @@ export default function gameBoard() {
 
 				// checks for existing ships
 				for (let j = posJ; j < posJ + shipBlocks[0].length; j++) {
-					if ("shipBlock" in newBoard[posI][j]) return null;
+					if ("shipBlock" in board[posI][j]) return null;
 				}
 
-				//iterates through the ship position horizontally in newBoard(10x10) + its length
+				//iterates through the ship position horizontally in board(10x10) + its length
 				shipIndex = 0;
 				for (let j = posJ; j < posJ + shipBlocks[0].length; j++) {
-					newBoard[posI][j] = {
+					board[posI][j] = {
 						wasShot: false,
 						shipBlock: shipBlocks[shipIndex],
 					};
@@ -45,13 +44,13 @@ export default function gameBoard() {
 
 				// checks for existing ships
 				for (let i = posI; i < posI + shipBlocks[0].length; i++) {
-					if ("shipBlock" in newBoard[i][posJ]) return null;
+					if ("shipBlock" in board[i][posJ]) return null;
 				}
 
-				//iterates through the ship position horizontally in newBoard(10x10) + its length
+				//iterates through the ship position vertically in board(10x10) + its length
 				shipIndex = 0;
 				for (let i = posI; i < posI + shipBlocks[0].length; i++) {
-					newBoard[i][posJ] = {
+					board[i][posJ] = {
 						wasShot: false,
 						shipBlock: shipBlocks[shipIndex],
 					};
@@ -65,25 +64,23 @@ export default function gameBoard() {
 				break;
 		}
 
-		//FIXME - attribute newBoard to state variable on Context later
-		return newBoard;
+		return board;
 	}
 
 	function makeShot(posI, posJ) {
 		let shotInfo;
 
-		if ("shipBlock" in board[posI][posJ]) {
-			if (board[posI][posJ].wasShot === true) return null; //when those coords were already shot
+		if (board[posI][posJ].wasShot === true) return null; //when those coords were already shot
 
+		if ("shipBlock" in board[posI][posJ]) {
 			board[posI][posJ].wasShot = true;
 			board[posI][posJ].shipBlock.isHit = true;
 			shotInfo = {
 				shipLength: board[posI][posJ].shipBlock.length,
+				blockHit: board[posI][posJ].shipBlock.block,
 				isHit: board[posI][posJ].shipBlock.isHit,
 			};
 		} else {
-			if (board[posI][posJ].wasShot === true) return null; //when those coords were already shot
-
 			board[posI][posJ].wasShot = true;
 			shotInfo = "water";
 		}

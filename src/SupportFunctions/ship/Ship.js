@@ -2,7 +2,7 @@ export default function Ship(length) {
 	let shipBlocks = [];
 
 	for (let i = 0; i < length; i++) {
-		shipBlocks.push({ length: length, isHit: false });
+		shipBlocks.push({ length: length, isHit: false, block: i });
 	}
 
 	function sinkShip() {
