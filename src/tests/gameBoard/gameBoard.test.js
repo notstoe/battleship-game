@@ -40,6 +40,7 @@ describe("addShip() usage horizontally", () => {
 		expect(fakeBoard.getBoard()[2][4]).toEqual({
 			wasShot: false,
 			shipBlock: { length: 3, isHit: false, block: 1 },
+			orientation: "x",
 		});
 	});
 
@@ -56,6 +57,7 @@ describe("addShip() usage horizontally", () => {
 			expect(fakeBoard.getBoard()[2][j]).not.toEqual({
 				wasShot: false,
 				shipBlock: expect.any(Object),
+				orientation: "x",
 			});
 		}
 	});
@@ -65,6 +67,7 @@ describe("addShip() usage horizontally", () => {
 			expect(fakeBoard.getBoard()[2][j]).not.toEqual({
 				wasShot: false,
 				shipBlock: expect.any(Object),
+				orientation: "x",
 			});
 		}
 	});
@@ -74,6 +77,7 @@ describe("addShip() usage horizontally", () => {
 			expect(fakeBoard.getBoard()[i][3]).not.toEqual({
 				wasShot: false,
 				shipBlock: expect.any(Object),
+				orientation: "x",
 			});
 		}
 	});
@@ -83,6 +87,7 @@ describe("addShip() usage horizontally", () => {
 			expect(fakeBoard.getBoard()[i][3]).not.toEqual({
 				wasShot: false,
 				shipBlock: expect.any(Object),
+				orientation: "x",
 			});
 		}
 	});
@@ -109,6 +114,7 @@ describe("addShip() usage vertically", () => {
 		expect(fakeBoard.getBoard()[5][2]).toEqual({
 			wasShot: false,
 			shipBlock: { length: 3, isHit: false, block: 1 },
+			orientation: "y",
 		});
 	});
 
@@ -154,6 +160,7 @@ describe("makeShot(posI, posJ) usage", () => {
 		expect(fakeBoard.getBoard()[6][6]).toEqual({
 			wasShot: true,
 			shipBlock: { length: 5, isHit: true, block: 1 },
+			orientation: "y",
 		});
 	});
 

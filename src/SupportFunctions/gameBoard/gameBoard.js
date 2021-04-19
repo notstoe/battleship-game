@@ -32,6 +32,7 @@ export default function gameBoard() {
 					board[posI][j] = {
 						wasShot: false,
 						shipBlock: shipBlocks[shipIndex],
+						orientation: orientation,
 					};
 					//increments the shipBlocks Array Index
 					shipIndex++;
@@ -53,6 +54,7 @@ export default function gameBoard() {
 					board[i][posJ] = {
 						wasShot: false,
 						shipBlock: shipBlocks[shipIndex],
+						orientation: orientation,
 					};
 					//increments the shipBlocks Array Index
 					shipIndex++;
