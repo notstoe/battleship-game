@@ -1,5 +1,5 @@
-import gameBoard from "../../SupportFunctions/gameBoard/gameBoard";
-import Ship from "../../SupportFunctions/ship/Ship";
+import gameBoard from "../factories/gameBoard";
+import ship from "../factories/ship";
 
 describe("getBoard() structure and usage", () => {
 	const fakeBoard = gameBoard();
@@ -25,8 +25,8 @@ describe("getBoard() structure and usage", () => {
 
 describe("addShip() usage horizontally", () => {
 	const fakeBoard = gameBoard();
-	const destroyer = Ship(3);
-	const submarine = Ship(2);
+	const destroyer = ship(3);
+	const submarine = ship(2);
 
 	it("addShip(...) available in GameBoard() return", () => {
 		expect(fakeBoard).toMatchObject({
@@ -105,8 +105,8 @@ describe("addShip() usage horizontally", () => {
 
 describe("addShip() usage vertically", () => {
 	const fakeBoard = gameBoard();
-	const destroyer = Ship(3);
-	const submarine = Ship(2);
+	const destroyer = ship(3);
+	const submarine = ship(2);
 
 	it("addShip(...) returns newBoard with ship in the right coords vertically", () => {
 		fakeBoard.addShip(4, 2, "y", destroyer.shipBlocks);
@@ -129,7 +129,7 @@ describe("addShip() usage vertically", () => {
 
 describe("makeShot(posI, posJ) usage", () => {
 	const fakeBoard = gameBoard();
-	const carrier = Ship(5);
+	const carrier = ship(5);
 
 	// placing a ship to shoot it afterwards
 	fakeBoard.addShip(5, 6, "y", carrier.shipBlocks);

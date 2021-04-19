@@ -1,7 +1,7 @@
-import Ship from "../../SupportFunctions/ship/Ship";
+import ship from "../factories/ship";
 
 it("returns ship object with correct structure", () => {
-	expect(Ship(1)).toMatchObject({
+	expect(ship(1)).toMatchObject({
 		shipBlocks: [{ length: 1, isHit: false, block: 0 }],
 		isSunk: false,
 		takeHit: expect.any(Function),
@@ -9,7 +9,7 @@ it("returns ship object with correct structure", () => {
 });
 
 it("returns ship object with correct length", () => {
-	expect(Ship(3)).toEqual({
+	expect(ship(3)).toEqual({
 		shipBlocks: [
 			{ length: 3, isHit: false, block: 0 },
 			{ length: 3, isHit: false, block: 1 },
@@ -25,7 +25,7 @@ describe("testing dmg to a ship of length 4", () => {
 	let fakeState;
 
 	beforeEach(() => {
-		battleship = Ship(4);
+		battleship = ship(4);
 	});
 
 	it("returns new ship with target block hit", () => {
@@ -68,7 +68,7 @@ describe("testing dmg to a ship of length 4", () => {
 		});
 	});
 
-	it("returns already dmged ship with target block hit", () => {
+	it("returns already dmged ship with 2 targets block hit", () => {
 		expect(fakeState.takeHit(1)).toEqual({
 			shipBlocks: [
 				{ length: 4, isHit: true, block: 0 },
