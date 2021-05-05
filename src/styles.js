@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 export const MainWrapper = styled.div`
 	display: flex;
@@ -19,22 +19,28 @@ export const Title = styled.h1`
 
 	width: 100%;
 	max-width: 410px;
+
+	> :first-child {
+	}
 `;
 
 export const StyledImage = styled.img`
 	${({ title }) =>
 		title &&
-		`width: 17.8rem;
-    height: 6rem;`}
+		css`
+			width: 17.8rem;
+			height: 6rem;
+		`}
 
 	${({ icon }) =>
 		icon &&
-		`
-    flex: 1;
-    align-self: center;
+		css`
+			flex: 1;
+			align-self: center;
 
-    width: 5rem;
-    height: 5.3rem;`}
+			width: 5rem;
+			height: 5.3rem;
+		`}
 `;
 
 export const ContentWrapper = styled.div`
