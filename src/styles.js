@@ -7,7 +7,7 @@ export const MainWrapper = styled.div`
 	align-items: center;
 
 	width: 100vw;
-	height: 100vh;
+	min-height: 100vh;
 
 	background: var(--bg-blue);
 	padding: 0.8rem 3rem;
@@ -52,14 +52,23 @@ export const ContentWrapper = styled.div`
 
 	h1 {
 		font-family: Special Elite, sans-serif;
-		font-size: 1.85rem;
+		font-size: 1.6rem;
 		text-align: center;
 
 		color: var(--highlight-yellow);
-		margin: 2.8rem 0;
+		margin: 2.3rem 0;
 	}
 
-	div {
+	> div {
 		flex: 1;
+
+		display: grid;
+		place-items: center;
+
+		width: 100%;
+
+		grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+		grid-template-rows: auto;
+		row-gap: 3rem;
 	}
 `;
