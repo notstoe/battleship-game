@@ -19,12 +19,9 @@ export const Title = styled.h1`
 
 	width: 100%;
 	max-width: 410px;
-
-	> :first-child {
-	}
 `;
 
-export const StyledImage = styled.img`
+export const Image = styled.img`
 	${({ title }) =>
 		title &&
 		css`
@@ -47,4 +44,22 @@ export const ContentWrapper = styled.div`
 	flex: 1;
 	width: 100%;
 	max-width: 1100px;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+
+	h1 {
+		font-family: Special Elite, sans-serif;
+		font-size: 1.85rem;
+		text-align: center;
+
+		color: var(--highlight-yellow);
+		margin: 2.8rem 0;
+	}
+
+	div {
+		flex: 1;
+	}
 `;

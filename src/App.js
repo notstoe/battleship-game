@@ -1,15 +1,20 @@
 import React from "react";
-import { MainWrapper, Title, ContentWrapper, StyledImage } from "./styles";
+import Board from "./Components/Board";
+import { MainWrapper, Title, ContentWrapper, Image } from "./styles";
 
 function App() {
 	return (
 		<MainWrapper>
 			<Title>
-				<StyledImage title src="assets/battleshipTitle.png" alt="battleship" />
-				<StyledImage icon src="assets/battleship.svg" alt="battleship icon" />
+				<Image title src="assets/battleshipTitle.png" alt="battleship" />
+				<Image icon src="assets/battleship.svg" alt="battleship icon" />
 			</Title>
 			<ContentWrapper>
-				<div>Hello World</div>
+				<h1>Click on your board to place your ships!</h1>
+				<div>
+					<Board />
+					<Board />
+				</div>
 			</ContentWrapper>
 		</MainWrapper>
 	);
