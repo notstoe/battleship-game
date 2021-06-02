@@ -69,6 +69,18 @@ const Overlay = styled.div`
 		font-family: Special Elite, sans-serif;
 		font-size: 1.2rem;
 		line-height: 0;
+
+		transition: all 150ms;
+
+		:hover {
+			box-shadow: 0px 0px 8px 3px rgba(255, 255, 255, 0.3);
+		}
+
+		:active {
+			/* box-shadow: 0px 0px 10px 3px rgba(0, 0, 0, 0.4); */
+			border: 1px inset var(--highlight-yellow);
+			transform: scale(0.97);
+		}
 	}
 `;
 
