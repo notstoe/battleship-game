@@ -10,7 +10,8 @@ const BoardWrapper = styled.div`
 	justify-content: space-between;
 	align-items: center;
 
-	h2 {
+	h2,
+	span {
 		font-family: Special Elite, sans-serif;
 		font-size: 1.4rem;
 
@@ -33,6 +34,10 @@ const BoardWrapper = styled.div`
 		font-size: 1.1rem;
 		line-height: 0.7rem;
 	}
+
+	.emptyFooter {
+		padding-bottom: 3.8rem;
+	}
 `;
 
 const IndividualBoard = styled.div`
@@ -53,7 +58,7 @@ const IndividualBoard = styled.div`
 	}
 `;
 
-function Board() {
+function Board({ player }) {
 	const boardFunctions = gameBoard();
 
 	const [stateBoard, setStateBoard] = useState(boardFunctions.getBoard());
@@ -79,11 +84,19 @@ function Board() {
 
 	return (
 		<BoardWrapper>
-			<h2>Gustavo: 0</h2>
+			<h2>
+				{player.name + ": "}
+				<span>{player.score}</span>
+			</h2>
+
 			<IndividualBoard>{boardBlocks}</IndividualBoard>
-			<footer>
-				<button>rotate</button>
-			</footer>
+			{player.name !== "AI" ? (
+				<footer>
+					<button>rotate</button>
+				</footer>
+			) : (
+				<footer className="emptyFooter" />
+			)}
 		</BoardWrapper>
 	);
 }
