@@ -59,7 +59,7 @@ export const ContentWrapper = styled.div`
 		margin: 2.3rem 0;
 	}
 
-	> div {
+	.gameArea {
 		flex: 1;
 
 		display: grid;
