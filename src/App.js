@@ -50,7 +50,6 @@ function App() {
 			<ContentWrapper>
 				<h1>Click on your board to place your ships!</h1>
 				<div className="gameArea">
-					{/* FIXME - fix board props */}
 					<Board player={players[0]} />
 					<Board player={players[1]} />
 				</div>
