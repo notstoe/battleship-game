@@ -3,7 +3,7 @@ export default function player(name) {
 	let score = 0;
 
 	function getName() {
-		return JSON.parse(JSON.stringify(playerName));
+		return playerName;
 	}
 
 	function setName(newName) {
@@ -11,7 +11,7 @@ export default function player(name) {
 	}
 
 	function getScore() {
-		return JSON.parse(JSON.stringify(score));
+		return score;
 	}
 
 	function incrementScore() {
