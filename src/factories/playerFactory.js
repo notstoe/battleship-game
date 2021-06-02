@@ -1,4 +1,4 @@
-export default function player(name) {
+export default function playerFactory(name) {
 	let playerName = name;
 	let score = 0;
 

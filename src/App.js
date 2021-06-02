@@ -1,20 +1,45 @@
 import React, { useState } from "react";
 import Board from "./Components/Board";
-import player from "./factories/player";
+import PlayerModal from "./Components/PlayerModal";
+import playerFactory from "./factories/playerFactory";
 import { MainWrapper, Title, ContentWrapper, Image } from "./styles";
 
 function App() {
-	const playerH = player("Gustavo");
-	const playerAI = player("AI");
+	// const playerAI = playerFactory("AI");
 
-	const [player1, setPlayer1] = useState({
-		name: playerH.getName(),
-		score: playerH.getScore(),
-	});
-	const [player2, setPlayer2] = useState({
-		name: playerAI.getName(),
-		score: playerAI.getScore(),
-	});
+	// const [player1, setPlayer1] = useState({
+	// 	name: playerH.getName(),
+	// 	score: playerH.getScore(),
+	// });
+
+	// const [player2, setPlayer2] = useState({
+	// 	name: playerAI.getName(),
+	// 	score: playerAI.getScore(),
+	// });
+
+	const [players, setPlayers] = useState([]);
+
+	const [showModal, setShowModal] = useState(true);
+	const [modalInput, setModalInput] = useState("");
+
+	function toggleModal() {
+		setShowModal(!showModal);
+	}
+
+	function handleModalInputChange(e) {
+		setModalInput(e.target.value);
+	}
+
+	function handleSubmit(e) {
+		e.preventDefault();
+		setShowModal(!showModal);
+
+		const human = playerFactory(modalInput);
+		const playerAI = playerFactory("AI");
+
+		const newPlayers = [human, playerAI];
+		setPlayers(newPlayers);
+	}
 
 	return (
 		<MainWrapper>
@@ -25,10 +50,20 @@ function App() {
 			<ContentWrapper>
 				<h1>Click on your board to place your ships!</h1>
 				<div className="gameArea">
-					<Board player={player1} />
-					<Board player={player2} />
+					{/* FIXME - fix board props */}
+					<Board player={players[0]} />
+					<Board player={players[1]} />
 				</div>
 			</ContentWrapper>
+
+			{showModal && (
+				<PlayerModal
+					toggleModal={toggleModal}
+					handleModalInputChange={handleModalInputChange}
+					modalInput={modalInput}
+					handleSubmit={handleSubmit}
+				/>
+			)}
 		</MainWrapper>
 	);
 }

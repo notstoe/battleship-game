@@ -85,15 +85,19 @@ function Board({ player }) {
 	return (
 		<BoardWrapper>
 			<h2>
-				{player.name + ": "}
-				<span>{player.score}</span>
+				{player ? player.getName() + ": " : "Player: "}
+				<span>{player ? player.getScore() : "0"}</span>
 			</h2>
 
 			<IndividualBoard>{boardBlocks}</IndividualBoard>
-			{player.name !== "AI" ? (
-				<footer>
-					<button>rotate</button>
-				</footer>
+			{player ? (
+				player.getName() !== "AI" ? (
+					<footer>
+						<button>rotate</button>
+					</footer>
+				) : (
+					<footer className="emptyFooter" />
+				)
 			) : (
 				<footer className="emptyFooter" />
 			)}
