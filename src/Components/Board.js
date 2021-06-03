@@ -71,6 +71,8 @@ const IndividualBoard = styled.div`
 `;
 
 function Board({ player }) {
+	// TODO - move board to state, like Player is, in the context
+
 	const boardFunctions = gameBoard();
 
 	const [stateBoard, setStateBoard] = useState(boardFunctions.getBoard());

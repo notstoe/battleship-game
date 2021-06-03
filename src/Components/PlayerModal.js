@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useContext } from "react";
+import { GameRulesContext } from "../contexts/GameContext";
 
 import styled from "styled-components";
 
@@ -84,12 +85,11 @@ const Overlay = styled.div`
 	}
 `;
 
-export default function PlayerModal({
-	toggleModal,
-	handleModalInputChange,
-	modalInput,
-	handleSubmit,
-}) {
+export default function PlayerModal() {
+	const { handleModalInputChange, modalInput, handleSubmit } = useContext(
+		GameRulesContext
+	);
+
 	return (
 		<Overlay>
 			<form>
