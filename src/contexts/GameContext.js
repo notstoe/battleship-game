@@ -27,7 +27,14 @@ export function GameRulesProvider({ children }) {
 		e.preventDefault();
 		setShowModal(!showModal);
 
-		const human = playerFactory(modalInput);
+		let human;
+
+		if (modalInput.length === 0) {
+			human = playerFactory("Anonymous");
+		} else {
+			human = playerFactory(modalInput);
+		}
+
 		const playerAI = playerFactory("AI");
 
 		const newPlayers = { human, playerAI };
