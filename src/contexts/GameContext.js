@@ -6,7 +6,7 @@ import playerFactory from "../factories/playerFactory";
 export const GameRulesContext = createContext({});
 
 export function GameRulesProvider({ children }) {
-	const [players, setPlayers] = useState([]);
+	const [playersCtx, setPlayersCtx] = useState({});
 
 	const [showModal, setShowModal] = useState(true);
 	const [modalInput, setModalInput] = useState("");
@@ -26,8 +26,8 @@ export function GameRulesProvider({ children }) {
 		const human = playerFactory(modalInput);
 		const playerAI = playerFactory("AI");
 
-		const newPlayers = [human, playerAI];
-		setPlayers(newPlayers);
+		const newPlayers = { human, playerAI };
+		setPlayersCtx(newPlayers);
 	}
 
 	return (
@@ -36,7 +36,7 @@ export function GameRulesProvider({ children }) {
 				toggleModal,
 				handleModalInputChange,
 				handleSubmit,
-				players,
+				playersCtx,
 				modalInput,
 			}}
 		>

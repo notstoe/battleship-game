@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 
 import styled from "styled-components";
+import { GameRulesContext } from "../contexts/GameContext";
 
 import gameBoard from "../factories/gameBoard";
 
@@ -73,6 +74,8 @@ const IndividualBoard = styled.div`
 function Board({ player }) {
 	// TODO - move board to state, like Player is, in the context
 
+	const { playersCtx } = useContext(GameRulesContext);
+
 	const boardFunctions = gameBoard();
 
 	const [stateBoard, setStateBoard] = useState(boardFunctions.getBoard());
@@ -96,27 +99,35 @@ function Board({ player }) {
 		);
 	});
 
-	return (
-		<BoardWrapper>
-			<h2>
-				{player ? player.getName() + ": " : "Player: "}
-				<span>{player ? player.getScore() : "0"}</span>
-			</h2>
-
-			<IndividualBoard>{boardBlocks}</IndividualBoard>
-			{player ? (
-				player.getName() !== "AI" ? (
-					<footer>
-						<button>rotate</button>
-					</footer>
-				) : (
-					<footer className="emptyFooter" />
-				)
-			) : (
+	if (player === "human") {
+		return (
+			<BoardWrapper>
+				<h2>
+					{playersCtx.human ? playersCtx.human.getName() + ": " : "Player: "}
+					<span>{playersCtx.human ? playersCtx.human.getScore() : "0"}</span>
+				</h2>
+				<IndividualBoard>{boardBlocks}</IndividualBoard>
+				<footer>
+					<button>rotate</button>
+				</footer>
+			</BoardWrapper>
+		);
+	} else if (player === "AI") {
+		return (
+			<BoardWrapper>
+				<h2>
+					{playersCtx.playerAI
+						? playersCtx.playerAI.getName() + ": "
+						: "Player: "}
+					<span>
+						{playersCtx.playerAI ? playersCtx.playerAI.getScore() : "0"}
+					</span>
+				</h2>
+				<IndividualBoard>{boardBlocks}</IndividualBoard>
 				<footer className="emptyFooter" />
-			)}
-		</BoardWrapper>
-	);
+			</BoardWrapper>
+		);
+	}
 }
 
 export default Board;
