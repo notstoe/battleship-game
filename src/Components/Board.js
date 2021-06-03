@@ -1,9 +1,7 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 
 import styled from "styled-components";
 import { GameRulesContext } from "../contexts/GameContext";
-
-import gameBoard from "../factories/gameBoard";
 
 const BoardWrapper = styled.div`
 	display: flex;
@@ -72,13 +70,7 @@ const IndividualBoard = styled.div`
 `;
 
 function Board({ player }) {
-	// TODO - move board to state, like Player is, in the context
-
-	const { playersCtx } = useContext(GameRulesContext);
-
-	const boardFunctions = gameBoard();
-
-	const [stateBoard, setStateBoard] = useState(boardFunctions.getBoard());
+	const { playersCtx, stateBoard } = useContext(GameRulesContext);
 
 	const boardBlocks = stateBoard.map((row, rowIndex) => {
 		return (

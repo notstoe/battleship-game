@@ -1,5 +1,6 @@
 import React, { createContext, useState } from "react";
 import PlayerModal from "../Components/PlayerModal";
+import gameBoard from "../factories/gameBoard";
 
 import playerFactory from "../factories/playerFactory";
 
@@ -10,6 +11,9 @@ export function GameRulesProvider({ children }) {
 
 	const [showModal, setShowModal] = useState(true);
 	const [modalInput, setModalInput] = useState("");
+
+	const boardFunctions = gameBoard();
+	const [stateBoard, setStateBoard] = useState(boardFunctions.getBoard());
 
 	function toggleModal() {
 		setShowModal(!showModal);
@@ -38,6 +42,7 @@ export function GameRulesProvider({ children }) {
 				handleSubmit,
 				playersCtx,
 				modalInput,
+				stateBoard,
 			}}
 		>
 			{children}
