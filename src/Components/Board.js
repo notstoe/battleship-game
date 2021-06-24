@@ -73,6 +73,7 @@ function Board({ player }) {
 		stateBoardHuman,
 		stateBoardAI,
 		handleBoardClick,
+		handleOrientationBtnClick,
 	} = useContext(GameRulesContext);
 
 	const boardDivsHuman = stateBoardHuman.map((row, rowIndex) => {
@@ -127,6 +128,8 @@ function Board({ player }) {
 		);
 	});
 
+	//TODO - send Counter from context to know when placing ships is over, change buttons and change text at the top
+
 	if (player === "human") {
 		return (
 			<BoardWrapper>
@@ -136,7 +139,7 @@ function Board({ player }) {
 				</h2>
 				<IndividualBoard>{boardDivsHuman}</IndividualBoard>
 				<footer>
-					<button>rotate</button>
+					<button onClick={handleOrientationBtnClick}>rotate</button>
 				</footer>
 			</BoardWrapper>
 		);

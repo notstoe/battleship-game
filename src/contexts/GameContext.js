@@ -23,8 +23,13 @@ export function GameRulesProvider({ children }) {
 		boardFunctionsAI.current.getBoard()
 	);
 
-	//TODO - change it into an array or obj with all ships from a player
-	const shipsCreated = Ship(2);
+	//TODO - add AI ships at the same time as Human ships but randomly
+	const shipsHuman = useRef([Ship(1), Ship(2), Ship(3), Ship(4), Ship(5)]);
+	// const shipsAI = useRef([Ship(1), Ship(2), Ship(3), Ship(4), Ship(5)]);
+
+	const [counter, setCounter] = useState(0);
+
+	const [orientation, setOrientation] = useState("x");
 
 	function toggleModal() {
 		setShowModal(!showModal);
@@ -52,25 +57,42 @@ export function GameRulesProvider({ children }) {
 		setPlayersCtx(newPlayers);
 	}
 
+	function handleOrientationBtnClick() {
+		orientation === "x" ? setOrientation("y") : setOrientation("x");
+	}
+
 	function handleBoardClick(e) {
 		const boardOwner = e.target.parentNode.parentNode.parentNode.firstChild.firstChild.textContent.slice(
 			0,
 			-2
 		);
 
-		if (boardOwner === "AI") return;
-
 		const rowIndex = Number(e.target.parentNode.attributes[0].textContent);
 		const colIndex = Number(e.target.attributes[0].textContent);
 
-		boardFunctionsHuman.current.addShip(
-			rowIndex,
-			colIndex,
-			"x",
-			shipsCreated.shipBlocks
-		);
+		//SHIPS PLACEMENT
+		if (counter < 5) {
+			if (boardOwner === "AI") return;
 
-		setStateBoardHuman(boardFunctionsHuman.current.getBoard());
+			const addShipReturn = boardFunctionsHuman.current.addShip(
+				rowIndex,
+				colIndex,
+				orientation,
+				shipsHuman.current[counter].shipBlocks
+			);
+
+			if (!addShipReturn) {
+				alert("Oops! Can't place your ship there");
+				return;
+			}
+
+			setStateBoardHuman(boardFunctionsHuman.current.getBoard());
+			setCounter((prevState) => prevState + 1);
+		} else {
+			//TODO - TAKING SHOTS, GAME START
+			if (boardOwner !== "AI") return;
+			console.log([colIndex, rowIndex, "taking shots"]);
+		}
 	}
 
 	return (
@@ -79,6 +101,7 @@ export function GameRulesProvider({ children }) {
 				toggleModal,
 				handleModalInputChange,
 				handleSubmit,
+				handleOrientationBtnClick,
 				handleBoardClick,
 				playersCtx,
 				modalInput,
