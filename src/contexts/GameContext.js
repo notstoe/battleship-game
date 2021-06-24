@@ -3,6 +3,7 @@ import PlayerModal from "../Components/PlayerModal";
 import gameBoard from "../factories/gameBoard";
 
 import playerFactory from "../factories/playerFactory";
+import Ship from "../factories/ship";
 
 export const GameRulesContext = createContext({});
 
@@ -12,8 +13,16 @@ export function GameRulesProvider({ children }) {
 	const [showModal, setShowModal] = useState(true);
 	const [modalInput, setModalInput] = useState("");
 
-	const boardFunctions = gameBoard();
-	const [stateBoard, setStateBoard] = useState(boardFunctions.getBoard());
+	const boardFunctionsHuman = gameBoard();
+	const [stateBoardHuman, setStateBoardHuman] = useState(
+		boardFunctionsHuman.getBoard()
+	);
+
+	const boardFunctionsAI = gameBoard();
+	const [stateBoardAI, setStateBoardAI] = useState(boardFunctionsAI.getBoard());
+
+	//TODO - change it into an array or obj with all ships from a player
+	const shipsCreated = Ship(2);
 
 	function toggleModal() {
 		setShowModal(!showModal);
@@ -41,15 +50,38 @@ export function GameRulesProvider({ children }) {
 		setPlayersCtx(newPlayers);
 	}
 
+	function handleBoardClick(e) {
+		const boardOwner = e.target.parentNode.parentNode.parentNode.firstChild.firstChild.textContent.slice(
+			0,
+			-2
+		);
+
+		if (boardOwner === "AI") return;
+
+		const rowIndex = Number(e.target.parentNode.attributes[0].textContent);
+		const colIndex = Number(e.target.attributes[0].textContent);
+
+		boardFunctionsHuman.addShip(
+			rowIndex,
+			colIndex,
+			"x",
+			shipsCreated.shipBlocks
+		);
+
+		setStateBoardHuman(boardFunctionsHuman.getBoard());
+	}
+
 	return (
 		<GameRulesContext.Provider
 			value={{
 				toggleModal,
 				handleModalInputChange,
 				handleSubmit,
+				handleBoardClick,
 				playersCtx,
 				modalInput,
-				stateBoard,
+				stateBoardHuman,
+				stateBoardAI,
 			}}
 		>
 			{children}

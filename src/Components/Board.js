@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { GameRulesContext } from "../contexts/GameContext";
 
 const BoardWrapper = styled.div`
@@ -66,24 +66,58 @@ const IndividualBoard = styled.div`
 		width: 2rem;
 		height: 2rem;
 		border: 1px var(--light-black) solid;
+
+		${({ shipblock }) =>
+			shipblock &&
+			css`
+				background-color: var(--bg-blue);
+			`}
 	}
 `;
 
 function Board({ player }) {
-	const { playersCtx, stateBoard } = useContext(GameRulesContext);
+	const {
+		playersCtx,
+		stateBoardHuman,
+		stateBoardAI,
+		handleBoardClick,
+	} = useContext(GameRulesContext);
 
-	const boardBlocks = stateBoard.map((row, rowIndex) => {
+	const boardDivsHuman = stateBoardHuman.map((row, rowIndex) => {
 		return (
-			<div key={rowIndex} className="row">
+			<div key={rowIndex} row={rowIndex} className="row">
 				{row.map((col, colIndex) => {
 					return (
 						<div
 							key={colIndex}
+							col={colIndex}
 							className="col"
 							shipblock={
 								col.shipBlock ? JSON.stringify(col.shipBlock) : undefined
 							}
 							shot={col.wasShot.toString()}
+							onClick={handleBoardClick}
+						></div>
+					);
+				})}
+			</div>
+		);
+	});
+
+	const boardDivsAI = stateBoardAI.map((row, rowIndex) => {
+		return (
+			<div key={rowIndex} row={rowIndex} className="row">
+				{row.map((col, colIndex) => {
+					return (
+						<div
+							key={colIndex}
+							col={colIndex}
+							className="col"
+							shipblock={
+								col.shipBlock ? JSON.stringify(col.shipBlock) : undefined
+							}
+							shot={col.wasShot.toString()}
+							onClick={handleBoardClick}
 						></div>
 					);
 				})}
@@ -98,7 +132,7 @@ function Board({ player }) {
 					{playersCtx.human ? playersCtx.human.getName() + ": " : "Player: "}
 					<span>{playersCtx.human ? playersCtx.human.getScore() : "0"}</span>
 				</h2>
-				<IndividualBoard>{boardBlocks}</IndividualBoard>
+				<IndividualBoard>{boardDivsHuman}</IndividualBoard>
 				<footer>
 					<button>rotate</button>
 				</footer>
@@ -115,7 +149,7 @@ function Board({ player }) {
 						{playersCtx.playerAI ? playersCtx.playerAI.getScore() : "0"}
 					</span>
 				</h2>
-				<IndividualBoard>{boardBlocks}</IndividualBoard>
+				<IndividualBoard>{boardDivsAI}</IndividualBoard>
 				<footer className="emptyFooter" />
 			</BoardWrapper>
 		);
