@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import { GameRulesContext } from "../contexts/GameContext";
 
 const BoardWrapper = styled.div`
@@ -52,8 +52,6 @@ const BoardWrapper = styled.div`
 `;
 
 const IndividualBoard = styled.div`
-	background-color: var(--highlight-yellow);
-
 	box-shadow: 4px 7px 14px 5px rgba(0, 0, 0, 0.2);
 	border-radius: 3px;
 
@@ -66,12 +64,6 @@ const IndividualBoard = styled.div`
 		width: 2rem;
 		height: 2rem;
 		border: 1px var(--light-black) solid;
-
-		${({ shipblock }) =>
-			shipblock &&
-			css`
-				background-color: var(--bg-blue);
-			`}
 	}
 `;
 
@@ -96,6 +88,11 @@ function Board({ player }) {
 								col.shipBlock ? JSON.stringify(col.shipBlock) : undefined
 							}
 							shot={col.wasShot.toString()}
+							style={
+								col.shipBlock
+									? { backgroundColor: "#183f57" }
+									: { backgroundColor: "#ffc678" }
+							}
 							onClick={handleBoardClick}
 						></div>
 					);
@@ -117,6 +114,11 @@ function Board({ player }) {
 								col.shipBlock ? JSON.stringify(col.shipBlock) : undefined
 							}
 							shot={col.wasShot.toString()}
+							style={
+								col.shipBlock
+									? { backgroundColor: "#183f57" }
+									: { backgroundColor: "#ffc678" }
+							}
 							onClick={handleBoardClick}
 						></div>
 					);

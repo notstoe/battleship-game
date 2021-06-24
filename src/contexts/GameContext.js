@@ -1,4 +1,4 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useRef, useState } from "react";
 import PlayerModal from "../Components/PlayerModal";
 import gameBoard from "../factories/gameBoard";
 
@@ -13,13 +13,15 @@ export function GameRulesProvider({ children }) {
 	const [showModal, setShowModal] = useState(true);
 	const [modalInput, setModalInput] = useState("");
 
-	const boardFunctionsHuman = gameBoard();
+	const boardFunctionsHuman = useRef(gameBoard()); //useRef prevents variable being re-defined everytime component re-renders
 	const [stateBoardHuman, setStateBoardHuman] = useState(
-		boardFunctionsHuman.getBoard()
+		boardFunctionsHuman.current.getBoard()
 	);
 
-	const boardFunctionsAI = gameBoard();
-	const [stateBoardAI, setStateBoardAI] = useState(boardFunctionsAI.getBoard());
+	const boardFunctionsAI = useRef(gameBoard());
+	const [stateBoardAI, setStateBoardAI] = useState(
+		boardFunctionsAI.current.getBoard()
+	);
 
 	//TODO - change it into an array or obj with all ships from a player
 	const shipsCreated = Ship(2);
@@ -61,14 +63,14 @@ export function GameRulesProvider({ children }) {
 		const rowIndex = Number(e.target.parentNode.attributes[0].textContent);
 		const colIndex = Number(e.target.attributes[0].textContent);
 
-		boardFunctionsHuman.addShip(
+		boardFunctionsHuman.current.addShip(
 			rowIndex,
 			colIndex,
 			"x",
 			shipsCreated.shipBlocks
 		);
 
-		setStateBoardHuman(boardFunctionsHuman.getBoard());
+		setStateBoardHuman(boardFunctionsHuman.current.getBoard());
 	}
 
 	return (
