@@ -99,6 +99,7 @@ export function GameRulesProvider({ children }) {
 				modalInput,
 				stateBoardHuman,
 				stateBoardAI,
+				counter,
 			}}
 		>
 			{children}

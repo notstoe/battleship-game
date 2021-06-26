@@ -1,6 +1,7 @@
 import React from "react";
 
 import Board from "./Components/Board";
+import FlavorSubtitle from "./Components/FlavorSubtitle";
 import { GameRulesProvider } from "./contexts/GameContext";
 
 import styled, { css } from "styled-components";
@@ -15,7 +16,7 @@ const MainWrapper = styled.div`
 	min-height: 100vh;
 
 	background: var(--bg-blue);
-	padding: 0.8rem 3rem;
+	padding: 0.8rem 0.2rem;
 `;
 
 const Title = styled.h1`
@@ -55,15 +56,6 @@ const ContentWrapper = styled.div`
 	justify-content: space-between;
 	align-items: center;
 
-	h1 {
-		font-family: Special Elite, sans-serif;
-		font-size: 1.6rem;
-		text-align: center;
-
-		color: var(--highlight-yellow);
-		margin: 2.3rem 0;
-	}
-
 	.gameArea {
 		flex: 1;
 
@@ -87,7 +79,7 @@ function App() {
 					<Image icon src="assets/battleship.svg" alt="battleship icon" />
 				</Title>
 				<ContentWrapper>
-					<h1>Click on your board to place your ships!</h1>
+					<FlavorSubtitle />
 					<div className="gameArea">
 						<Board player={"human"} />
 						<Board player={"AI"} />
