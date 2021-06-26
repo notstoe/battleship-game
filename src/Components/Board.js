@@ -94,7 +94,9 @@ function Board({ player }) {
 									? { backgroundColor: "#183f57" }
 									: { backgroundColor: "#ffc678" }
 							}
-							onClick={handleBoardClick}
+							onClick={(e) => {
+								handleBoardClick("human", rowIndex, colIndex);
+							}}
 						></div>
 					);
 				})}
@@ -120,7 +122,9 @@ function Board({ player }) {
 									? { backgroundColor: "#183f57" }
 									: { backgroundColor: "#ffc678" }
 							}
-							onClick={handleBoardClick}
+							onClick={() => {
+								handleBoardClick("AI", rowIndex, colIndex);
+							}}
 						></div>
 					);
 				})}

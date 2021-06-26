@@ -61,15 +61,7 @@ export function GameRulesProvider({ children }) {
 		orientation === "x" ? setOrientation("y") : setOrientation("x");
 	}
 
-	function handleBoardClick(e) {
-		const boardOwner = e.target.parentNode.parentNode.parentNode.firstChild.firstChild.textContent.slice(
-			0,
-			-2
-		);
-
-		const rowIndex = Number(e.target.parentNode.attributes[0].textContent);
-		const colIndex = Number(e.target.attributes[0].textContent);
-
+	function handleBoardClick(boardOwner, rowIndex, colIndex) {
 		//SHIPS PLACEMENT
 		if (counter < 5) {
 			if (boardOwner === "AI") return;
