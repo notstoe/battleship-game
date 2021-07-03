@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import { GameRulesContext } from "../contexts/GameContext";
 
 const BoardWrapper = styled.div`
@@ -84,6 +84,7 @@ function Board({ player }) {
 		stateBoardAI,
 		handleBoardClick,
 		handleOrientationBtnClick,
+		handleChangeNameBtnClick,
 		counter,
 	} = useContext(GameRulesContext);
 
@@ -158,9 +159,7 @@ function Board({ player }) {
 						</button>
 					) : (
 						<>
-							<button onClick={() => console.log("change name")}>
-								Change Name
-							</button>
+							<button onClick={handleChangeNameBtnClick}>Change Name</button>
 							<button onClick={() => console.log("reset")}>Reset</button>
 						</>
 					)}

@@ -5,6 +5,8 @@ import gameBoard from "../factories/gameBoard";
 import playerFactory from "../factories/playerFactory";
 import Ship from "../factories/ship";
 
+import isEmpty from "../supportFunctions/isEmpty";
+
 export const GameRulesContext = createContext({});
 
 export function GameRulesProvider({ children }) {
@@ -43,22 +45,36 @@ export function GameRulesProvider({ children }) {
 		e.preventDefault();
 		setShowModal(!showModal);
 
-		let human;
+		if (isEmpty(playersCtx)) {
+			let human;
 
-		if (modalInput.length === 0) {
-			human = playerFactory("Anonymous");
+			if (modalInput.length === 0) {
+				human = playerFactory("Anonymous");
+			} else {
+				human = playerFactory(modalInput);
+			}
+
+			const playerAI = playerFactory("AI");
+
+			const newPlayers = { human, playerAI };
+			setPlayersCtx(newPlayers);
 		} else {
-			human = playerFactory(modalInput);
+			let newPlayersCtx = { ...playersCtx };
+
+			newPlayersCtx.human.setName(
+				modalInput.length === 0 ? "Anonymous" : modalInput
+			);
+
+			setPlayersCtx(newPlayersCtx);
 		}
-
-		const playerAI = playerFactory("AI");
-
-		const newPlayers = { human, playerAI };
-		setPlayersCtx(newPlayers);
 	}
 
 	function handleOrientationBtnClick() {
 		orientation === "x" ? setOrientation("y") : setOrientation("x");
+	}
+
+	function handleChangeNameBtnClick() {
+		toggleModal();
 	}
 
 	function handleBoardClick(boardOwner, rowIndex, colIndex) {
@@ -94,6 +110,7 @@ export function GameRulesProvider({ children }) {
 				handleModalInputChange,
 				handleSubmit,
 				handleOrientationBtnClick,
+				handleChangeNameBtnClick,
 				handleBoardClick,
 				playersCtx,
 				modalInput,
