@@ -6,6 +6,7 @@ import playerFactory from "../factories/playerFactory";
 import Ship from "../factories/ship";
 
 import isEmpty from "../supportFunctions/isEmpty";
+import { getRandomInt, getRandomXorY } from "../supportFunctions/getRandomInt";
 
 export const GameRulesContext = createContext({});
 
@@ -25,9 +26,8 @@ export function GameRulesProvider({ children }) {
 		boardFunctionsAI.current.getBoard()
 	);
 
-	//TODO - add AI ships at the same time as Human ships but randomly
 	const shipsHuman = useRef([Ship(1), Ship(2), Ship(3), Ship(4), Ship(5)]);
-	// const shipsAI = useRef([Ship(1), Ship(2), Ship(3), Ship(4), Ship(5)]);
+	const shipsAI = useRef([Ship(1), Ship(2), Ship(3), Ship(4), Ship(5)]);
 
 	const [counter, setCounter] = useState(0);
 
@@ -46,6 +46,7 @@ export function GameRulesProvider({ children }) {
 		setShowModal(!showModal);
 
 		if (isEmpty(playersCtx)) {
+			//first Modal, creates new players
 			let human;
 
 			if (modalInput.length === 0) {
@@ -59,6 +60,7 @@ export function GameRulesProvider({ children }) {
 			const newPlayers = { human, playerAI };
 			setPlayersCtx(newPlayers);
 		} else {
+			//changing name on modal
 			let newPlayersCtx = { ...playersCtx };
 
 			newPlayersCtx.human.setName(
@@ -77,6 +79,8 @@ export function GameRulesProvider({ children }) {
 		toggleModal();
 	}
 
+	//TODO - reset button functionality
+
 	function handleBoardClick(boardOwner, rowIndex, colIndex) {
 		//SHIPS PLACEMENT
 		if (counter < 5) {
@@ -94,7 +98,25 @@ export function GameRulesProvider({ children }) {
 				return;
 			}
 
+			let addShipAIReturn = boardFunctionsAI.current.addShip(
+				getRandomInt(0, 9),
+				getRandomInt(0, 9),
+				getRandomXorY(),
+				shipsAI.current[counter].shipBlocks
+			);
+
+			//keeps trying to add ship until return is truthy (adding off the grid or on top of another ship)
+			while (!addShipAIReturn) {
+				addShipAIReturn = boardFunctionsAI.current.addShip(
+					getRandomInt(0, 9),
+					getRandomInt(0, 9),
+					getRandomXorY(),
+					shipsAI.current[counter].shipBlocks
+				);
+			}
+
 			setStateBoardHuman(boardFunctionsHuman.current.getBoard());
+			setStateBoardAI(boardFunctionsAI.current.getBoard());
 			setCounter((prevState) => prevState + 1);
 		} else {
 			//TODO - TAKING SHOTS, GAME START
