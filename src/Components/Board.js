@@ -129,11 +129,7 @@ function Board({ player }) {
 								col.shipBlock ? JSON.stringify(col.shipBlock) : undefined
 							}
 							shot={col.wasShot.toString()}
-							style={
-								col.shipBlock
-									? { backgroundColor: "#183f57" }
-									: { backgroundColor: "#ffc678" }
-							}
+							style={{ backgroundColor: "#ffc678" }}
 							onClick={() => {
 								handleBoardClick("AI", rowIndex, colIndex);
 							}}
