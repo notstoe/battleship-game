@@ -19,7 +19,7 @@ export default function FlavorSubtitle() {
 		<FlavorTxt>
 			{counter < 5
 				? "Click on your board to place your ships!"
-				: "Good luck! Take your shot!"}
+				: "Good luck! Click on the AI board to take your shot!"}
 		</FlavorTxt>
 	);
 }

@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { GameRulesContext } from "../contexts/GameContext";
 
 const BoardWrapper = styled.div`
@@ -17,6 +17,17 @@ const BoardWrapper = styled.div`
 		color: var(--highlight-yellow);
 
 		margin-bottom: 1rem;
+	}
+
+	footer {
+		width: 100%;
+
+		display: flex;
+		justify-content: space-between;
+
+		.rotateBtn {
+			margin: 1rem auto 0 auto;
+		}
 	}
 
 	button {
@@ -40,7 +51,6 @@ const BoardWrapper = styled.div`
 		}
 
 		:active {
-			/* box-shadow: 0px 0px 10px 3px rgba(0, 0, 0, 0.4); */
 			border: 1px inset var(--highlight-yellow);
 			transform: scale(0.97);
 		}
@@ -74,6 +84,7 @@ function Board({ player }) {
 		stateBoardAI,
 		handleBoardClick,
 		handleOrientationBtnClick,
+		counter,
 	} = useContext(GameRulesContext);
 
 	const boardDivsHuman = stateBoardHuman.map((row, rowIndex) => {
@@ -132,8 +143,6 @@ function Board({ player }) {
 		);
 	});
 
-	//TODO - send Counter from context to know when placing ships is over, change buttons and change text at the top
-
 	if (player === "human") {
 		return (
 			<BoardWrapper>
@@ -143,7 +152,18 @@ function Board({ player }) {
 				</h2>
 				<IndividualBoard>{boardDivsHuman}</IndividualBoard>
 				<footer>
-					<button onClick={handleOrientationBtnClick}>rotate</button>
+					{counter < 5 ? (
+						<button className="rotateBtn" onClick={handleOrientationBtnClick}>
+							rotate
+						</button>
+					) : (
+						<>
+							<button onClick={() => console.log("change name")}>
+								Change Name
+							</button>
+							<button onClick={() => console.log("reset")}>Reset</button>
+						</>
+					)}
 				</footer>
 			</BoardWrapper>
 		);
