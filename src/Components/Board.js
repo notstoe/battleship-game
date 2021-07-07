@@ -85,6 +85,7 @@ function Board({ player }) {
 		handleBoardClick,
 		handleOrientationBtnClick,
 		handleChangeNameBtnClick,
+		handleResetBtnClick,
 		counter,
 	} = useContext(GameRulesContext);
 
@@ -156,7 +157,7 @@ function Board({ player }) {
 					) : (
 						<>
 							<button onClick={handleChangeNameBtnClick}>Change Name</button>
-							<button onClick={() => console.log("reset")}>Reset</button>
+							<button onClick={handleResetBtnClick}>Reset</button>
 						</>
 					)}
 				</footer>

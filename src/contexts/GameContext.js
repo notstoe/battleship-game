@@ -79,7 +79,18 @@ export function GameRulesProvider({ children }) {
 		toggleModal();
 	}
 
-	//TODO - reset button functionality
+	function handleResetBtnClick() {
+		boardFunctionsHuman.current = gameBoard();
+		setStateBoardHuman(boardFunctionsHuman.current.getBoard());
+
+		boardFunctionsAI.current = gameBoard();
+		setStateBoardAI(boardFunctionsAI.current.getBoard());
+
+		shipsHuman.current = [Ship(1), Ship(2), Ship(3), Ship(4), Ship(5)];
+		shipsAI.current = [Ship(1), Ship(2), Ship(3), Ship(4), Ship(5)];
+
+		setCounter(0);
+	}
 
 	function handleBoardClick(boardOwner, rowIndex, colIndex) {
 		//SHIPS PLACEMENT
@@ -133,6 +144,7 @@ export function GameRulesProvider({ children }) {
 				handleSubmit,
 				handleOrientationBtnClick,
 				handleChangeNameBtnClick,
+				handleResetBtnClick,
 				handleBoardClick,
 				playersCtx,
 				modalInput,
