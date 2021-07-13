@@ -9,23 +9,26 @@ const FlavorTxt = styled.h1`
 	text-align: center;
 
 	color: var(--highlight-yellow);
-	margin: 2.3rem 0;
+	margin: 2rem 0;
+	padding-top: 1rem;
+	min-height: 3.9rem;
+	line-height: 2.3rem;
 `;
 
 export default function FlavorSubtitle() {
-	const { counter, infoGame } = useContext(GameRulesContext);
+	const { counter, display } = useContext(GameRulesContext);
 
-	let display;
+	let displayTxt;
 
-	if (infoGame.length > 0) {
-		display = infoGame;
+	if (display.length > 0) {
+		displayTxt = display;
 	} else {
 		if (counter < 5) {
-			display = "Click on your board to place your ships!";
+			displayTxt = "Click on your board to place your ships!";
 		} else {
-			display = "Good luck! Click on the AI board to take your shot!";
+			displayTxt = "Good luck! Click on the AI board to take your shot!";
 		}
 	}
 
-	return <FlavorTxt>{display}</FlavorTxt>;
+	return <FlavorTxt>{displayTxt}</FlavorTxt>;
 }

@@ -26,11 +26,19 @@ export function GameRulesProvider({ children }) {
 		boardFunctionsAI.current.getBoard()
 	);
 
+	const [shotAllowed, setShotAllowed] = useState(true);
+
+	//TODO - save last coords if it was a hit
+	// const [memoryAI, setMemoryAI] = useState(null);
+
 	const shipsHuman = useRef([Ship(1), Ship(2), Ship(3), Ship(4), Ship(5)]);
 	const shipsAI = useRef([Ship(1), Ship(2), Ship(3), Ship(4), Ship(5)]);
+	// TODO - end game when all ships from one player sunk
+	const [shipsLeftAI, setShipsLeftAI] = useState(5);
+	const [shipsLeftHuman, setShipsLeftHuman] = useState(5);
 
 	const [counter, setCounter] = useState(0);
-	const [infoGame, setInfoGame] = useState("");
+	const [display, setDisplay] = useState("");
 
 	const [orientation, setOrientation] = useState("x");
 
@@ -91,6 +99,10 @@ export function GameRulesProvider({ children }) {
 		shipsAI.current = [Ship(1), Ship(2), Ship(3), Ship(4), Ship(5)];
 
 		setCounter(0);
+		setDisplay("");
+		setShotAllowed(true);
+		setShipsLeftAI(5);
+		setShipsLeftHuman(5);
 	}
 
 	function handleBoardClick(boardOwner, rowIndex, colIndex) {
@@ -131,18 +143,67 @@ export function GameRulesProvider({ children }) {
 			setStateBoardAI(boardFunctionsAI.current.getBoard());
 			setCounter((prevState) => prevState + 1);
 		} else {
-			//TODO - TAKING SHOTS, GAME START
+			//TAKING SHOTS, GAME START
+
 			if (boardOwner !== "AI") return;
+			if (!shotAllowed) return;
+			setShotAllowed(false); //controlling against spamming shots
 
-			const shotInfo = boardFunctionsAI.current.makeShot(rowIndex, colIndex);
+			//HUMAN SHOT
+			const shotInfoHuman = boardFunctionsAI.current.makeShot(
+				rowIndex,
+				colIndex
+			);
 
-			if (shotInfo === null) return;
+			if (shotInfoHuman === null) return;
 
-			if (shotInfo === "water") {
-				setInfoGame("Water!");
+			if (shotInfoHuman === "water") {
+				setDisplay("Water! Your aim was off on that one.");
+			} else {
+				setDisplay("That's a direct hit. Good job!");
+
+				//shotInfo looks like this {shipLength, isHit, blockHit}
+				const dmgedShipAI = shipsAI.current[
+					shotInfoHuman.shipLength - 1
+				].takeHit(shotInfoHuman.blockHit);
+
+				if (dmgedShipAI.isSunk) setShipsLeftAI((prevState) => prevState - 1);
 			}
 
 			setStateBoardAI(boardFunctionsAI.current.getBoard());
+
+			//AI SHOT
+
+			setTimeout(() => setDisplay("Calculating next shot..."), 2200);
+			setTimeout(() => {
+				let shotInfoAI = boardFunctionsHuman.current.makeShot(
+					getRandomInt(0, 9),
+					getRandomInt(0, 9)
+				);
+
+				while (!shotInfoAI)
+					shotInfoAI = boardFunctionsHuman.current.makeShot(
+						getRandomInt(0, 9),
+						getRandomInt(0, 9)
+					);
+
+				if (shotInfoAI === "water") {
+					setDisplay("You dodged that one. Water!");
+				} else {
+					setDisplay("Ouch. That's a hit!");
+
+					//shotInfo looks like this {shipLength, isHit, blockHit}
+					const dmgedShipHuman = shipsHuman.current[
+						shotInfoAI.shipLength - 1
+					].takeHit(shotInfoAI.blockHit);
+
+					if (dmgedShipHuman.isSunk)
+						setShipsLeftHuman((prevState) => prevState - 1);
+				}
+
+				setStateBoardHuman(boardFunctionsHuman.current.getBoard());
+				setShotAllowed(true);
+			}, 3500);
 		}
 	}
 
@@ -161,7 +222,7 @@ export function GameRulesProvider({ children }) {
 				stateBoardHuman,
 				stateBoardAI,
 				counter,
-				infoGame,
+				display,
 			}}
 		>
 			{children}

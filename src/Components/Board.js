@@ -109,14 +109,20 @@ function Board({ player }) {
 								col.shipBlock ? JSON.stringify(col.shipBlock) : undefined
 							}
 							style={
-								col.shipBlock
+								col.wasShot
+									? col.shipBlock
+										? { backgroundColor: "#183f57", color: "#ffc678" }
+										: { backgroundColor: "#6baad1" }
+									: col.shipBlock
 									? { backgroundColor: "#183f57" }
 									: { backgroundColor: "#ffc678" }
 							}
 							onClick={(e) => {
 								handleBoardClick("human", rowIndex, colIndex);
 							}}
-						></div>
+						>
+							{col.wasShot && "X"}
+						</div>
 					);
 				})}
 			</div>
