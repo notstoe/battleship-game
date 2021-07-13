@@ -30,6 +30,7 @@ export function GameRulesProvider({ children }) {
 	const shipsAI = useRef([Ship(1), Ship(2), Ship(3), Ship(4), Ship(5)]);
 
 	const [counter, setCounter] = useState(0);
+	const [infoGame, setInfoGame] = useState("");
 
 	const [orientation, setOrientation] = useState("x");
 
@@ -132,7 +133,16 @@ export function GameRulesProvider({ children }) {
 		} else {
 			//TODO - TAKING SHOTS, GAME START
 			if (boardOwner !== "AI") return;
-			console.log([colIndex, rowIndex, "taking shots"]);
+
+			const shotInfo = boardFunctionsAI.current.makeShot(rowIndex, colIndex);
+
+			if (shotInfo === null) return;
+
+			if (shotInfo === "water") {
+				setInfoGame("Water!");
+			}
+
+			setStateBoardAI(boardFunctionsAI.current.getBoard());
 		}
 	}
 
@@ -151,6 +161,7 @@ export function GameRulesProvider({ children }) {
 				stateBoardHuman,
 				stateBoardAI,
 				counter,
+				infoGame,
 			}}
 		>
 			{children}

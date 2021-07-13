@@ -13,13 +13,19 @@ const FlavorTxt = styled.h1`
 `;
 
 export default function FlavorSubtitle() {
-	const { counter } = useContext(GameRulesContext);
+	const { counter, infoGame } = useContext(GameRulesContext);
 
-	return (
-		<FlavorTxt>
-			{counter < 5
-				? "Click on your board to place your ships!"
-				: "Good luck! Click on the AI board to take your shot!"}
-		</FlavorTxt>
-	);
+	let display;
+
+	if (infoGame.length > 0) {
+		display = infoGame;
+	} else {
+		if (counter < 5) {
+			display = "Click on your board to place your ships!";
+		} else {
+			display = "Good luck! Click on the AI board to take your shot!";
+		}
+	}
+
+	return <FlavorTxt>{display}</FlavorTxt>;
 }

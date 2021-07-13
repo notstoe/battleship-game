@@ -74,6 +74,13 @@ const IndividualBoard = styled.div`
 		width: 2rem;
 		height: 2rem;
 		border: 1px var(--light-black) solid;
+
+		cursor: pointer;
+
+		font-family: Nunito, sans-serif;
+		font-size: 2.4rem;
+		text-align: center;
+		line-height: 2rem;
 	}
 `;
 
@@ -101,7 +108,6 @@ function Board({ player }) {
 							shipblock={
 								col.shipBlock ? JSON.stringify(col.shipBlock) : undefined
 							}
-							shot={col.wasShot.toString()}
 							style={
 								col.shipBlock
 									? { backgroundColor: "#183f57" }
@@ -129,12 +135,19 @@ function Board({ player }) {
 							shipblock={
 								col.shipBlock ? JSON.stringify(col.shipBlock) : undefined
 							}
-							shot={col.wasShot.toString()}
-							style={{ backgroundColor: "#ffc678" }}
+							style={
+								col.wasShot
+									? col.shipBlock
+										? { backgroundColor: "#183f57", color: "#ffc678" }
+										: { backgroundColor: "#6baad1" }
+									: { backgroundColor: "#ffc678" }
+							}
 							onClick={() => {
 								handleBoardClick("AI", rowIndex, colIndex);
 							}}
-						></div>
+						>
+							{col.wasShot && "X"}
+						</div>
 					);
 				})}
 			</div>
