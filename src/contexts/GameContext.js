@@ -1,5 +1,6 @@
-import React, { createContext, useRef, useState } from "react";
+import React, { createContext, useEffect, useRef, useState } from "react";
 import PlayerModal from "../Components/PlayerModal";
+import GameOverModal from "../Components/GameOverModal";
 import gameBoard from "../factories/gameBoard";
 
 import playerFactory from "../factories/playerFactory";
@@ -33,9 +34,13 @@ export function GameRulesProvider({ children }) {
 
 	const shipsHuman = useRef([Ship(1), Ship(2), Ship(3), Ship(4), Ship(5)]);
 	const shipsAI = useRef([Ship(1), Ship(2), Ship(3), Ship(4), Ship(5)]);
+
 	// TODO - end game when all ships from one player sunk
 	const [shipsLeftAI, setShipsLeftAI] = useState(5);
 	const [shipsLeftHuman, setShipsLeftHuman] = useState(5);
+
+	const [isGameOver, setIsGameOver] = useState(false);
+	const [roundWinner, setRoundWinner] = useState("");
 
 	const [counter, setCounter] = useState(0);
 	const [display, setDisplay] = useState("");
@@ -103,6 +108,8 @@ export function GameRulesProvider({ children }) {
 		setShotAllowed(true);
 		setShipsLeftAI(5);
 		setShipsLeftHuman(5);
+		setIsGameOver(false);
+		setRoundWinner("");
 	}
 
 	function handleBoardClick(boardOwner, rowIndex, colIndex) {
@@ -207,6 +214,27 @@ export function GameRulesProvider({ children }) {
 		}
 	}
 
+	useEffect(() => {
+		if (shipsLeftAI === 0) {
+			setIsGameOver(true);
+			setRoundWinner(playersCtx.human.getName());
+
+			let newPlayersState = { ...playersCtx };
+			newPlayersState.human.incrementScore();
+
+			setPlayersCtx(newPlayersState);
+		}
+		if (shipsLeftHuman === 0) {
+			setIsGameOver(true);
+			setRoundWinner(playersCtx.playerAI.getName());
+
+			let newPlayersState = { ...playersCtx };
+			newPlayersState.playerAI.incrementScore();
+
+			setPlayersCtx(newPlayersState);
+		}
+	}, [shipsLeftAI, shipsLeftHuman]);
+
 	return (
 		<GameRulesContext.Provider
 			value={{
@@ -223,10 +251,12 @@ export function GameRulesProvider({ children }) {
 				stateBoardAI,
 				counter,
 				display,
+				roundWinner,
 			}}
 		>
 			{children}
 			{showModal && <PlayerModal />}
+			{isGameOver && <GameOverModal />}
 		</GameRulesContext.Provider>
 	);
 }
