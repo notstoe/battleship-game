@@ -30,12 +30,11 @@ export function GameRulesProvider({ children }) {
 	const [shotAllowed, setShotAllowed] = useState(true);
 
 	//TODO - save last coords if it was a hit
-	// const [memoryAI, setMemoryAI] = useState(null);
+	const [memoryAI, setMemoryAI] = useState({});
 
 	const shipsHuman = useRef([Ship(1), Ship(2), Ship(3), Ship(4), Ship(5)]);
 	const shipsAI = useRef([Ship(1), Ship(2), Ship(3), Ship(4), Ship(5)]);
 
-	// TODO - end game when all ships from one player sunk
 	const [shipsLeftAI, setShipsLeftAI] = useState(5);
 	const [shipsLeftHuman, setShipsLeftHuman] = useState(5);
 
@@ -110,6 +109,7 @@ export function GameRulesProvider({ children }) {
 		setShipsLeftHuman(5);
 		setIsGameOver(false);
 		setRoundWinner("");
+		setMemoryAI({});
 	}
 
 	function handleBoardClick(boardOwner, rowIndex, colIndex) {
@@ -152,9 +152,7 @@ export function GameRulesProvider({ children }) {
 		} else {
 			//TAKING SHOTS, GAME START
 
-			if (boardOwner !== "AI") return;
-			if (!shotAllowed) return;
-			setShotAllowed(false); //controlling against spamming shots
+			if (boardOwner !== "AI" || !shotAllowed) return;
 
 			//HUMAN SHOT
 			const shotInfoHuman = boardFunctionsAI.current.makeShot(
@@ -163,6 +161,7 @@ export function GameRulesProvider({ children }) {
 			);
 
 			if (shotInfoHuman === null) return;
+			setShotAllowed(false); //controlling against spamming shots
 
 			if (shotInfoHuman === "water") {
 				setDisplay("Water! Your aim was off on that one.");
@@ -181,25 +180,144 @@ export function GameRulesProvider({ children }) {
 
 			//AI SHOT
 
-			setTimeout(() => setDisplay("Calculating next shot..."), 2200);
-			setTimeout(() => {
-				let shotInfoAI = boardFunctionsHuman.current.makeShot(
-					getRandomInt(0, 9),
-					getRandomInt(0, 9)
-				);
+			// prevents last round from computer if Player wins
+			if (isGameOver) return;
 
-				while (!shotInfoAI)
+			let shotInfoAI;
+			let coordsAIShot;
+			let stopLoop = false;
+			let counter = 0;
+
+			setTimeout(() => setDisplay("Calculating next shot..."), 2100);
+			setTimeout(() => {
+				if ("hitWaterColPlus" in memoryAI && !memoryAI.hitWaterColPlus) {
+					while (!stopLoop) {
+						counter++;
+						coordsAIShot = { row: memoryAI.row, col: memoryAI.col + counter };
+
+						shotInfoAI = boardFunctionsHuman.current.makeShot(
+							coordsAIShot.row,
+							coordsAIShot.col
+						);
+						if (shotInfoAI || counter > 8) stopLoop = true;
+
+						if (shotInfoAI === "water" || !shotInfoAI) {
+							setMemoryAI({ ...memoryAI, hitWaterColPlus: true });
+						}
+					}
+				}
+				if ("hitWaterColMinus" in memoryAI && !memoryAI.hitWaterColMinus) {
+					if (!shotInfoAI) {
+						stopLoop = false;
+						counter = 0;
+						while (!stopLoop) {
+							counter++;
+
+							coordsAIShot = {
+								row: memoryAI.row,
+								col: memoryAI.col - counter,
+							};
+							shotInfoAI = boardFunctionsHuman.current.makeShot(
+								coordsAIShot.row,
+								coordsAIShot.col
+							);
+
+							if (shotInfoAI || counter > 8) stopLoop = true;
+
+							if (shotInfoAI === "water" || !shotInfoAI) {
+								setMemoryAI({ ...memoryAI, hitWaterColMinus: true });
+							}
+						}
+					}
+				}
+				if ("hitWaterRowPlus" in memoryAI && !memoryAI.hitWaterRowPlus) {
+					// if both col changes are invalid, try rows
+					if (!shotInfoAI) {
+						stopLoop = false;
+						counter = 0;
+						while (!stopLoop) {
+							counter++;
+							coordsAIShot = { row: memoryAI.row + counter, col: memoryAI.col };
+							shotInfoAI = boardFunctionsHuman.current.makeShot(
+								coordsAIShot.row,
+								coordsAIShot.col
+							);
+							if (shotInfoAI || counter > 8) stopLoop = true;
+
+							if (shotInfoAI === "water" || !shotInfoAI) {
+								setMemoryAI({ ...memoryAI, hitWaterRowPlus: true });
+							}
+						}
+					}
+				}
+				if ("hitWaterRowMinus" in memoryAI && !memoryAI.hitWaterRowMinus) {
+					if (!shotInfoAI) {
+						stopLoop = false;
+						counter = 0;
+						while (!stopLoop) {
+							counter++;
+							coordsAIShot = { row: memoryAI.row - counter, col: memoryAI.col };
+							shotInfoAI = boardFunctionsHuman.current.makeShot(
+								coordsAIShot.row,
+								coordsAIShot.col
+							);
+							if (shotInfoAI || counter > 8) stopLoop = true;
+
+							if (shotInfoAI === "water" || !shotInfoAI) {
+								setMemoryAI({ ...memoryAI, hitWaterRowMinus: true });
+							}
+						}
+					}
+				}
+				//tries to shoot if all tries are unsucessful, until return from MakeShot() is truthy
+				while (!shotInfoAI) {
+					coordsAIShot = { row: getRandomInt(0, 9), col: getRandomInt(0, 9) };
+
 					shotInfoAI = boardFunctionsHuman.current.makeShot(
-						getRandomInt(0, 9),
-						getRandomInt(0, 9)
+						coordsAIShot.row,
+						coordsAIShot.col
 					);
+
+					if (shotInfoAI === "water") {
+						setMemoryAI({});
+					}
+				}
 
 				if (shotInfoAI === "water") {
 					setDisplay("You dodged that one. Water!");
 				} else {
 					setDisplay("Ouch. That's a hit!");
 
-					//shotInfo looks like this {shipLength, isHit, blockHit}
+					if (memoryAI.hitWaterRowPlus || memoryAI.hitWaterRowMinus) {
+						if (memoryAI.hitWaterRowPlus && memoryAI.hitWaterColMinus) {
+							setMemoryAI({});
+						} else {
+							let newMemory = { ...memoryAI };
+							newMemory.row = coordsAIShot.row;
+							newMemory.col = coordsAIShot.col;
+							setMemoryAI(newMemory);
+						}
+					} else if (memoryAI.hitWaterColPlus || memoryAI.hitWaterColMinus) {
+						if (memoryAI.hitWaterColPlus && memoryAI.hitWaterRowMinus) {
+							setMemoryAI({});
+						} else {
+							let newMemory = { ...memoryAI };
+							newMemory.row = coordsAIShot.row;
+							newMemory.col = coordsAIShot.col;
+							setMemoryAI(newMemory);
+						}
+					} else {
+						setMemoryAI({
+							row: coordsAIShot.row,
+							col: coordsAIShot.col,
+							hitWaterRowPlus: false,
+							hitWaterRowMinus: false,
+							hitWaterColPlus: false,
+							hitWaterColMinus: false,
+						});
+					}
+
+					//shotInfo return looks like this -> {shipLength, isHit, blockHit}
 					const dmgedShipHuman = shipsHuman.current[
 						shotInfoAI.shipLength - 1
 					].takeHit(shotInfoAI.blockHit);
@@ -213,6 +331,8 @@ export function GameRulesProvider({ children }) {
 			}, 3500);
 		}
 	}
+
+	/* eslint-disable */
 
 	useEffect(() => {
 		if (shipsLeftAI === 0) {
@@ -234,6 +354,8 @@ export function GameRulesProvider({ children }) {
 			setPlayersCtx(newPlayersState);
 		}
 	}, [shipsLeftAI, shipsLeftHuman]);
+
+	/* eslint-enable */
 
 	return (
 		<GameRulesContext.Provider
