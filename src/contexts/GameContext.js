@@ -29,7 +29,6 @@ export function GameRulesProvider({ children }) {
 
 	const [shotAllowed, setShotAllowed] = useState(true);
 
-	//TODO - save last coords if it was a hit
 	const [memoryAI, setMemoryAI] = useState({});
 
 	const shipsHuman = useRef([Ship(1), Ship(2), Ship(3), Ship(4), Ship(5)]);
