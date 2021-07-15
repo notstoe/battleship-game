@@ -72,6 +72,8 @@ export default function gameBoard() {
 	function makeShot(posI, posJ) {
 		let shotInfo;
 
+		if (posI > 9) return null; //off grid
+		if (posJ > 9) return null; //off grid
 		if (board[posI][posJ].wasShot === true) return null; //when those coords were already shot
 
 		if ("shipBlock" in board[posI][posJ]) {
