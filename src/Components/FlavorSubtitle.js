@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
 import { GameRulesContext } from "../contexts/GameContext";
 
-import { motion } from "framer-motion";
 import styled from "styled-components";
+import { motion } from "framer-motion";
 
 const FlavorTxt = styled(motion.h1)`
 	font-family: Special Elite, sans-serif;
@@ -31,13 +31,18 @@ export default function FlavorSubtitle() {
 		}
 	}
 
-	const favlorTxtVariants = {
-		hidden: { opacity: 0 },
-		visible: { opacity: 1, transition: { duration: 0.4 } },
+	const flavorTxtVariants = {
+		hidden: { y: "-20vh", scale: 0.5, opacity: 0 },
+		visible: {
+			y: 0,
+			scale: 1,
+			opacity: 1,
+			transition: { type: "spring", delay: 1, duration: 0.6 },
+		},
 	};
 
 	return (
-		<FlavorTxt variants={favlorTxtVariants} initial="hidden" animate="visible">
+		<FlavorTxt variants={flavorTxtVariants} initial="hidden" animate="visible">
 			{displayTxt}
 		</FlavorTxt>
 	);

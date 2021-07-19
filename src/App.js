@@ -8,6 +8,7 @@ import battleshipTitle from "./assets/battleshipTitle.png";
 import battleshipIcon from "./assets/battleship.svg";
 
 import styled, { css } from "styled-components";
+import { motion } from "framer-motion";
 
 const MainWrapper = styled.div`
 	display: flex;
@@ -20,9 +21,11 @@ const MainWrapper = styled.div`
 
 	background: var(--bg-blue);
 	padding: 0.8rem 0.2rem;
+
+	transition: all 0.2s ease-in;
 `;
 
-const Title = styled.h1`
+const Title = styled(motion.h1)`
 	display: flex;
 	justify-content: center;
 
@@ -30,7 +33,7 @@ const Title = styled.h1`
 	max-width: 410px;
 `;
 
-const Image = styled.img`
+const Image = styled(motion.img)`
 	${({ title }) =>
 		title &&
 		css`
@@ -49,7 +52,7 @@ const Image = styled.img`
 		`}
 `;
 
-const ContentWrapper = styled.div`
+const ContentWrapper = styled(motion.div)`
 	flex: 1;
 	width: 100%;
 	max-width: 1100px;
@@ -76,15 +79,33 @@ const ContentWrapper = styled.div`
 function App() {
 	const { showPage } = useContext(GameRulesContext);
 
+	const contentVariants = {
+		hidden: { opacity: 0 },
+		visible: { opacity: 1, transition: { duration: 0.6 } },
+	};
+
+	const titleVariants = {
+		hidden: { y: "-50vh", scale: 0.5 },
+		visible: {
+			y: 0,
+			scale: 1,
+			transition: { type: "spring", delay: 0.8, duration: 0.5 },
+		},
+	};
+
 	return (
 		<MainWrapper>
 			{showPage && (
 				<>
-					<Title>
+					<Title variants={titleVariants} initial="hidden" animate="visible">
 						<Image title src={battleshipTitle} alt="battleship" />
 						<Image icon src={battleshipIcon} alt="battleship icon" />
 					</Title>
-					<ContentWrapper>
+					<ContentWrapper
+						variants={contentVariants}
+						initial="hidden"
+						animate="visible"
+					>
 						<FlavorSubtitle />
 						<div className="gameArea">
 							<Board player={"human"} />
