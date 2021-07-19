@@ -1,7 +1,8 @@
 import React, { useContext } from "react";
-
-import styled from "styled-components";
 import { GameRulesContext } from "../contexts/GameContext";
+
+import { motion } from "framer-motion";
+import styled from "styled-components";
 
 const BoardWrapper = styled.div`
 	display: flex;
@@ -98,6 +99,25 @@ function Board({ player }) {
 		counter,
 	} = useContext(GameRulesContext);
 
+	const btnVariants = {
+		hidden: { x: "-30vh", opacity: 0 },
+		visible: {
+			opacity: 1,
+			x: 0,
+			transition: { type: "spring", duration: 1, delay: 2 },
+		},
+		exit: { opacity: 0, transition: { duration: 0.5 } },
+	};
+
+	const btnsInGameVariants = {
+		hidden: { scale: 0.1, opacity: 0 },
+		visible: {
+			opacity: 1,
+			scale: 1,
+			transition: { duration: 0.18 },
+		},
+	};
+
 	const boardDivsHuman = stateBoardHuman.map((row, rowIndex) => {
 		return (
 			<div key={rowIndex} row={rowIndex} className="row">
@@ -170,18 +190,37 @@ function Board({ player }) {
 					<span>{playersCtx.human ? playersCtx.human.getScore() : "0"}</span>
 				</h2>
 				<IndividualBoard>{boardDivsHuman}</IndividualBoard>
-				<footer>
+				<motion.footer
+					variants={btnVariants}
+					initial="hidden"
+					animate="visible"
+					exit="exit"
+				>
 					{counter < 5 ? (
 						<button className="rotateBtn" onClick={handleOrientationBtnClick}>
 							rotate
 						</button>
 					) : (
 						<>
-							<button onClick={handleChangeNameBtnClick}>Change Name</button>
-							<button onClick={handleResetBtnClick}>Reset</button>
+							<motion.button
+								variants={btnsInGameVariants}
+								initial="hidden"
+								animate="visible"
+								onClick={handleChangeNameBtnClick}
+							>
+								Change Name
+							</motion.button>
+							<motion.button
+								variants={btnsInGameVariants}
+								initial="hidden"
+								animate="visible"
+								onClick={handleResetBtnClick}
+							>
+								Reset
+							</motion.button>
 						</>
 					)}
-				</footer>
+				</motion.footer>
 			</BoardWrapper>
 		);
 	} else if (player === "AI") {
