@@ -2,8 +2,9 @@ import React, { useContext } from "react";
 import { GameRulesContext } from "../contexts/GameContext";
 
 import styled from "styled-components";
+import { motion } from "framer-motion";
 
-const Overlay = styled.div`
+const Overlay = styled(motion.div)`
 	background: rgba(0, 0, 0, 0.6);
 	position: fixed;
 	top: 0;
@@ -73,13 +74,27 @@ const Overlay = styled.div`
 export default function GameOverModal() {
 	const { handleResetBtnClick, roundWinner } = useContext(GameRulesContext);
 
+	const overlayVariants = {
+		hidden: { opacity: 0 },
+		visible: { opacity: 1, transition: { duration: 0.2 } },
+	};
+
+	const modalVariants = {
+		hidden: { opacity: 0, scale: 0.6 },
+		visible: {
+			opacity: 1,
+			scale: 1,
+			transition: { duration: 0.15, delay: 0.1 },
+		},
+	};
+
 	return (
-		<Overlay>
-			<div className="modal">
+		<Overlay variants={overlayVariants} initial="hidden" animate="visible">
+			<motion.div variants={modalVariants} className="modal">
 				<h1>{roundWinner} wins!</h1>
 				<h2>Game Over!</h2>
 				<button onClick={handleResetBtnClick}>Reset</button>
-			</div>
+			</motion.div>
 		</Overlay>
 	);
 }
