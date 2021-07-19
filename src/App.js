@@ -44,11 +44,15 @@ const Image = styled(motion.img)`
 	${({ icon }) =>
 		icon &&
 		css`
-			flex: 1;
+			flex: 0.6;
 			align-self: center;
 
 			width: 5rem;
 			height: 5.3rem;
+
+			@media (min-width: 900px) {
+				flex: 1;
+			}
 		`}
 `;
 
