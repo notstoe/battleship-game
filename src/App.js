@@ -6,6 +6,9 @@ import { GameRulesProvider } from "./contexts/GameContext";
 
 import styled, { css } from "styled-components";
 
+import battleshipTitle from "./assets/battleshipTitle.png";
+import battleshipIcon from "./assets/battleship.svg";
+
 const MainWrapper = styled.div`
 	display: flex;
 	flex-direction: column;
@@ -75,8 +78,8 @@ function App() {
 		<GameRulesProvider>
 			<MainWrapper>
 				<Title>
-					<Image title src="assets/battleshipTitle.png" alt="battleship" />
-					<Image icon src="assets/battleship.svg" alt="battleship icon" />
+					<Image title src={battleshipTitle} alt="battleship" />
+					<Image icon src={battleshipIcon} alt="battleship icon" />
 				</Title>
 				<ContentWrapper>
 					<FlavorSubtitle />
