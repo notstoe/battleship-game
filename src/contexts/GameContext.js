@@ -187,7 +187,7 @@ export function GameRulesProvider({ children }) {
 			let stopLoop = false;
 			let counter = 0;
 
-			setTimeout(() => setDisplay("Calculating next shot..."), 2100);
+			setTimeout(() => setDisplay("Calculating next shot..."), 1200);
 			setTimeout(() => {
 				if ("hitWaterColPlus" in memoryAI && !memoryAI.hitWaterColPlus) {
 					while (!stopLoop) {
@@ -327,7 +327,7 @@ export function GameRulesProvider({ children }) {
 
 				setStateBoardHuman(boardFunctionsHuman.current.getBoard());
 				setShotAllowed(true);
-			}, 3500);
+			}, 2200);
 		}
 	}
 
