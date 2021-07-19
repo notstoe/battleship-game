@@ -1,6 +1,6 @@
 {
 	"name": "battleship",
-	"homepage": "http://notstoe.github.io/notstoe",
+	"homepage": "http://notstoe.github.io/battleship",
 	"version": "0.1.0",
 	"private": true,
 	"dependencies": {
