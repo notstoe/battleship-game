@@ -81,6 +81,8 @@ const IndividualBoard = styled.div`
 		font-size: 2.4rem;
 		text-align: center;
 		line-height: 2rem;
+
+		transition: all 0.15s ease-out;
 	}
 `;
 
