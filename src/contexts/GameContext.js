@@ -17,6 +17,8 @@ export function GameRulesProvider({ children }) {
 	const [showModal, setShowModal] = useState(true);
 	const [modalInput, setModalInput] = useState("");
 
+	const [showPage, setShowPage] = useState(false);
+
 	const boardFunctionsHuman = useRef(gameBoard()); //useRef prevents variable being re-defined everytime component re-renders
 	const [stateBoardHuman, setStateBoardHuman] = useState(
 		boardFunctionsHuman.current.getBoard()
@@ -56,6 +58,7 @@ export function GameRulesProvider({ children }) {
 	function handleSubmit(e) {
 		e.preventDefault();
 		setShowModal(!showModal);
+		setShowPage(true);
 
 		if (isEmpty(playersCtx)) {
 			//first Modal, creates new players
@@ -366,6 +369,7 @@ export function GameRulesProvider({ children }) {
 				handleChangeNameBtnClick,
 				handleResetBtnClick,
 				handleBoardClick,
+				showPage,
 				playersCtx,
 				modalInput,
 				stateBoardHuman,

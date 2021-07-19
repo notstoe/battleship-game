@@ -1,13 +1,13 @@
-import React from "react";
+import React, { useContext } from "react";
+import { GameRulesContext } from "./contexts/GameContext";
 
 import Board from "./Components/Board";
 import FlavorSubtitle from "./Components/FlavorSubtitle";
-import { GameRulesProvider } from "./contexts/GameContext";
-
-import styled, { css } from "styled-components";
 
 import battleshipTitle from "./assets/battleshipTitle.png";
 import battleshipIcon from "./assets/battleship.svg";
+
+import styled, { css } from "styled-components";
 
 const MainWrapper = styled.div`
 	display: flex;
@@ -74,22 +74,26 @@ const ContentWrapper = styled.div`
 `;
 
 function App() {
+	const { showPage } = useContext(GameRulesContext);
+
 	return (
-		<GameRulesProvider>
-			<MainWrapper>
-				<Title>
-					<Image title src={battleshipTitle} alt="battleship" />
-					<Image icon src={battleshipIcon} alt="battleship icon" />
-				</Title>
-				<ContentWrapper>
-					<FlavorSubtitle />
-					<div className="gameArea">
-						<Board player={"human"} />
-						<Board player={"AI"} />
-					</div>
-				</ContentWrapper>
-			</MainWrapper>
-		</GameRulesProvider>
+		<MainWrapper>
+			{showPage && (
+				<>
+					<Title>
+						<Image title src={battleshipTitle} alt="battleship" />
+						<Image icon src={battleshipIcon} alt="battleship icon" />
+					</Title>
+					<ContentWrapper>
+						<FlavorSubtitle />
+						<div className="gameArea">
+							<Board player={"human"} />
+							<Board player={"AI"} />
+						</div>
+					</ContentWrapper>
+				</>
+			)}
+		</MainWrapper>
 	);
 }
 
