@@ -15,7 +15,8 @@ export function GameRulesProvider({ children }) {
 	const [playersCtx, setPlayersCtx] = useState({});
 
 	const [showModal, setShowModal] = useState(true);
-	const [modalInput, setModalInput] = useState("");
+	const [emailInput, setEmailInput] = useState("");
+	const [passwordInput, setPasswordInput] = useState("");
 
 	const [showPage, setShowPage] = useState(false);
 
@@ -51,8 +52,9 @@ export function GameRulesProvider({ children }) {
 		setShowModal(!showModal);
 	}
 
-	function handleModalInputChange(e) {
-		setModalInput(e.target.value);
+	function handleModalInputChange(event, inputName) {
+		if (inputName === "email") setEmailInput(event.target.value);
+		if (inputName === "password") setPasswordInput(event.target.value);
 	}
 
 	function handleSubmit(e) {
@@ -60,30 +62,31 @@ export function GameRulesProvider({ children }) {
 		setShowModal(!showModal);
 		setShowPage(true);
 
-		if (isEmpty(playersCtx)) {
-			//first Modal, creates new players
-			let human;
+		// if (isEmpty(playersCtx)) {
+		// 	// TODO - fix submit function
+		// 	//first Modal, creates new players
+		// 	let human;
 
-			if (modalInput.length === 0) {
-				human = playerFactory("Anonymous");
-			} else {
-				human = playerFactory(modalInput);
-			}
+		// 	if (modalInput.length === 0) {
+		// 		human = playerFactory("Anonymous");
+		// 	} else {
+		// 		human = playerFactory(modalInput);
+		// 	}
 
-			const playerAI = playerFactory("AI");
+		// 	const playerAI = playerFactory("AI");
 
-			const newPlayers = { human, playerAI };
-			setPlayersCtx(newPlayers);
-		} else {
-			//changing name on modal
-			let newPlayersCtx = { ...playersCtx };
+		// 	const newPlayers = { human, playerAI };
+		// 	setPlayersCtx(newPlayers);
+		// } else {
+		// 	//changing name on modal
+		// 	let newPlayersCtx = { ...playersCtx };
 
-			newPlayersCtx.human.setName(
-				modalInput.length === 0 ? "Anonymous" : modalInput
-			);
+		// 	newPlayersCtx.human.setName(
+		// 		modalInput.length === 0 ? "Anonymous" : modalInput
+		// 	);
 
-			setPlayersCtx(newPlayersCtx);
-		}
+		// 	setPlayersCtx(newPlayersCtx);
+		// }
 	}
 
 	function handleOrientationBtnClick() {
@@ -371,7 +374,8 @@ export function GameRulesProvider({ children }) {
 				handleBoardClick,
 				showPage,
 				playersCtx,
-				modalInput,
+				emailInput,
+				passwordInput,
 				stateBoardHuman,
 				stateBoardAI,
 				counter,

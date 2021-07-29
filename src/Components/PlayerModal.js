@@ -29,9 +29,9 @@ const Overlay = styled(motion.div)`
 		background: var(--bg-blue);
 
 		width: 90%;
-		height: 19rem;
+		height: 32rem;
 		max-width: 480px;
-		padding: 2.5rem 1.1rem;
+		padding: 1.8rem 1rem;
 
 		border: 2px solid var(--highlight-yellow);
 		box-shadow: 4px 7px 14px 5px rgba(0, 0, 0, 0.2);
@@ -41,25 +41,43 @@ const Overlay = styled(motion.div)`
 	}
 
 	header {
-		font-size: 1.8rem;
-		margin-bottom: 1rem;
+		font-size: 1.5rem;
 	}
 
 	input {
-		width: 90%;
-		max-width: 280px;
-		height: 2.8rem;
+		width: 83%;
+		max-width: 430px;
+
+		height: 70%;
+		max-height: 2.5rem;
 
 		padding: 0 0.6rem;
 		border-radius: 5px;
 
-		font-size: 1.4rem;
+		font-size: 1.2rem;
 
 		background: var(--fullwhite);
 	}
+`;
+
+const AuthBtnsContainer = styled.div`
+	display: grid;
+	justify-content: center;
+	grid-template: 1fr 1fr / 1fr 1fr;
+	column-gap: 1.8rem;
+	max-width: 100%;
+
+	.guestBtn {
+		grid-row: 2;
+		grid-column: 1 / 3;
+	}
+
+	@media (max-width: 420px) {
+		column-gap: 0.2rem;
+	}
 
 	button {
-		margin-top: 1.8rem;
+		margin-top: 1.7rem;
 		padding: 1.5rem 3.6rem;
 		border-radius: 38px;
 		border: 1px solid var(--highlight-yellow);
@@ -69,7 +87,7 @@ const Overlay = styled(motion.div)`
 		box-shadow: 4px 7px 14px 5px rgba(0, 0, 0, 0.2);
 
 		font-family: Special Elite, sans-serif;
-		font-size: 1.2rem;
+		font-size: 1.1rem;
 		line-height: 0;
 
 		transition: all 150ms;
@@ -83,13 +101,21 @@ const Overlay = styled(motion.div)`
 			border: 1px inset var(--highlight-yellow);
 			transform: scale(0.97);
 		}
+
+		@media (max-width: 420px) {
+			font-size: 1.1rem;
+			padding: 1.5rem 2rem;
+		}
 	}
 `;
 
 export default function PlayerModal() {
-	const { handleModalInputChange, modalInput, handleSubmit } = useContext(
-		GameRulesContext
-	);
+	const {
+		handleModalInputChange,
+		emailInput,
+		passwordInput,
+		handleSubmit,
+	} = useContext(GameRulesContext);
 
 	const overlayVariants = {
 		hidden: { opacity: 0 },
@@ -108,15 +134,30 @@ export default function PlayerModal() {
 	return (
 		<Overlay variants={overlayVariants} initial="hidden" animate="visible">
 			<motion.form variants={modalVariants}>
-				<header>Player's Name:</header>
+				<header>Email:</header>
 				<input
 					type="text"
-					value={modalInput}
-					onChange={handleModalInputChange}
+					value={emailInput}
+					onChange={(event) => handleModalInputChange(event, "email")}
 				/>
-				<button type="submit" onClick={handleSubmit}>
-					Play
-				</button>
+				<header>Password:</header>
+				<input
+					type="text"
+					value={passwordInput}
+					onChange={(event) => handleModalInputChange(event, "password")}
+				/>
+				<AuthBtnsContainer>
+					{/* TODO - fix these buttons and submit function */}
+					<button type="submit" onClick={handleSubmit}>
+						Log-in
+					</button>
+					<button type="submit" onClick={handleSubmit}>
+						Register
+					</button>
+					<button className="guestBtn" type="submit" onClick={handleSubmit}>
+						Play as Guest
+					</button>
+				</AuthBtnsContainer>
 			</motion.form>
 		</Overlay>
 	);
