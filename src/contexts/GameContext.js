@@ -1,26 +1,24 @@
-import React, { createContext, useEffect, useRef, useState } from "react";
-import PlayerModal from "../Components/PlayerModal";
+import React, {
+	createContext,
+	useContext,
+	useEffect,
+	useRef,
+	useState,
+} from "react";
 import GameOverModal from "../Components/GameOverModal";
 import gameBoard from "../factories/gameBoard";
 
-import playerFactory from "../factories/playerFactory";
 import Ship from "../factories/ship";
 
-import isEmpty from "../supportFunctions/isEmpty";
 import { getRandomInt, getRandomXorY } from "../supportFunctions/getRandomInt";
+import { AuthContext } from "./AuthContext";
 
 export const GameRulesContext = createContext({});
 
 export function GameRulesProvider({ children }) {
-	const [playersCtx, setPlayersCtx] = useState({});
+	const { toggleModal, playersCtx, setPlayersCtx } = useContext(AuthContext);
 
-	const [showModal, setShowModal] = useState(true);
-	const [emailInput, setEmailInput] = useState("");
-	const [passwordInput, setPasswordInput] = useState("");
-
-	const [showPage, setShowPage] = useState(false);
-
-	const boardFunctionsHuman = useRef(gameBoard()); //useRef prevents variable being re-defined everytime component re-renders
+	const boardFunctionsHuman = useRef(gameBoard()); //useRef to prevent variable being re-defined everytime component re-renders
 	const [stateBoardHuman, setStateBoardHuman] = useState(
 		boardFunctionsHuman.current.getBoard()
 	);
@@ -48,52 +46,12 @@ export function GameRulesProvider({ children }) {
 
 	const [orientation, setOrientation] = useState("x");
 
-	function toggleModal() {
-		setShowModal(!showModal);
-	}
-
-	function handleModalInputChange(event, inputName) {
-		if (inputName === "email") setEmailInput(event.target.value);
-		if (inputName === "password") setPasswordInput(event.target.value);
-	}
-
-	function handleSubmit(e) {
-		e.preventDefault();
-		setShowModal(!showModal);
-		setShowPage(true);
-
-		// if (isEmpty(playersCtx)) {
-		// 	// TODO - fix submit function
-		// 	//first Modal, creates new players
-		// 	let human;
-
-		// 	if (modalInput.length === 0) {
-		// 		human = playerFactory("Anonymous");
-		// 	} else {
-		// 		human = playerFactory(modalInput);
-		// 	}
-
-		// 	const playerAI = playerFactory("AI");
-
-		// 	const newPlayers = { human, playerAI };
-		// 	setPlayersCtx(newPlayers);
-		// } else {
-		// 	//changing name on modal
-		// 	let newPlayersCtx = { ...playersCtx };
-
-		// 	newPlayersCtx.human.setName(
-		// 		modalInput.length === 0 ? "Anonymous" : modalInput
-		// 	);
-
-		// 	setPlayersCtx(newPlayersCtx);
-		// }
-	}
-
 	function handleOrientationBtnClick() {
 		orientation === "x" ? setOrientation("y") : setOrientation("x");
 	}
 
 	function handleChangeNameBtnClick() {
+		//TODO - change this function and btn into logout
 		toggleModal();
 	}
 
@@ -365,17 +323,10 @@ export function GameRulesProvider({ children }) {
 	return (
 		<GameRulesContext.Provider
 			value={{
-				toggleModal,
-				handleModalInputChange,
-				handleSubmit,
 				handleOrientationBtnClick,
 				handleChangeNameBtnClick,
 				handleResetBtnClick,
 				handleBoardClick,
-				showPage,
-				playersCtx,
-				emailInput,
-				passwordInput,
 				stateBoardHuman,
 				stateBoardAI,
 				counter,
@@ -384,7 +335,6 @@ export function GameRulesProvider({ children }) {
 			}}
 		>
 			{children}
-			{showModal && <PlayerModal />}
 			{isGameOver && <GameOverModal />}
 		</GameRulesContext.Provider>
 	);

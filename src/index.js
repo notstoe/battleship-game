@@ -1,13 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
-import { GameRulesProvider } from "./contexts/GameContext";
+import { AuthContextProvider } from "./contexts/AuthContext";
 
 import "./global.css";
 
 ReactDOM.render(
-	<GameRulesProvider>
+	<AuthContextProvider>
 		<App />
-	</GameRulesProvider>,
+	</AuthContextProvider>,
 	document.getElementById("root")
 );

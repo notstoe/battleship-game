@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
-import { GameRulesContext } from "./contexts/GameContext";
+import { AuthContext } from "./contexts/AuthContext";
+import { GameRulesProvider } from "./contexts/GameContext";
 
 import Board from "./Components/Board";
 import FlavorSubtitle from "./Components/FlavorSubtitle";
@@ -81,7 +82,7 @@ const ContentWrapper = styled(motion.div)`
 `;
 
 function App() {
-	const { showPage } = useContext(GameRulesContext);
+	const { showPage } = useContext(AuthContext);
 
 	const contentVariants = {
 		hidden: { opacity: 0 },
@@ -98,27 +99,29 @@ function App() {
 	};
 
 	return (
-		<MainWrapper>
-			{showPage && (
-				<>
-					<Title variants={titleVariants} initial="hidden" animate="visible">
-						<Image title src={battleshipTitle} alt="battleship" />
-						<Image icon src={battleshipIcon} alt="battleship icon" />
-					</Title>
-					<ContentWrapper
-						variants={contentVariants}
-						initial="hidden"
-						animate="visible"
-					>
-						<FlavorSubtitle />
-						<div className="gameArea">
-							<Board player={"human"} />
-							<Board player={"AI"} />
-						</div>
-					</ContentWrapper>
-				</>
-			)}
-		</MainWrapper>
+		<GameRulesProvider>
+			<MainWrapper>
+				{showPage && (
+					<>
+						<Title variants={titleVariants} initial="hidden" animate="visible">
+							<Image title src={battleshipTitle} alt="battleship" />
+							<Image icon src={battleshipIcon} alt="battleship icon" />
+						</Title>
+						<ContentWrapper
+							variants={contentVariants}
+							initial="hidden"
+							animate="visible"
+						>
+							<FlavorSubtitle />
+							<div className="gameArea">
+								<Board player={"human"} />
+								<Board player={"AI"} />
+							</div>
+						</ContentWrapper>
+					</>
+				)}
+			</MainWrapper>
+		</GameRulesProvider>
 	);
 }
 

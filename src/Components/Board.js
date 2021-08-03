@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import { GameRulesContext } from "../contexts/GameContext";
+import { AuthContext } from "../contexts/AuthContext";
 
 import { motion } from "framer-motion";
 import styled from "styled-components";
@@ -89,7 +90,6 @@ const IndividualBoard = styled.div`
 
 function Board({ player }) {
 	const {
-		playersCtx,
 		stateBoardHuman,
 		stateBoardAI,
 		handleBoardClick,
@@ -98,6 +98,8 @@ function Board({ player }) {
 		handleResetBtnClick,
 		counter,
 	} = useContext(GameRulesContext);
+
+	const { playersCtx } = useContext(AuthContext);
 
 	const btnVariants = {
 		hidden: { x: "-30vh", opacity: 0 },

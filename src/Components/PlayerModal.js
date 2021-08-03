@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { GameRulesContext } from "../contexts/GameContext";
+import { AuthContext } from "../contexts/AuthContext";
 
 import styled from "styled-components";
 import { motion } from "framer-motion";
@@ -40,7 +40,7 @@ const Overlay = styled(motion.div)`
 		text-align: center;
 	}
 
-	header {
+	label {
 		font-size: 1.5rem;
 	}
 
@@ -114,8 +114,9 @@ export default function PlayerModal() {
 		handleModalInputChange,
 		emailInput,
 		passwordInput,
+		confirmPasswordInput,
 		handleSubmit,
-	} = useContext(GameRulesContext);
+	} = useContext(AuthContext);
 
 	const overlayVariants = {
 		hidden: { opacity: 0 },
@@ -134,27 +135,39 @@ export default function PlayerModal() {
 	return (
 		<Overlay variants={overlayVariants} initial="hidden" animate="visible">
 			<motion.form variants={modalVariants}>
-				<header>Email:</header>
+				<label htmlFor="email">Email:</label>
 				<input
+					name="email"
 					type="text"
 					value={emailInput}
 					onChange={(event) => handleModalInputChange(event, "email")}
 				/>
-				<header>Password:</header>
+				<label htmlFor="password">Password:</label>
 				<input
+					name="password"
 					type="text"
 					value={passwordInput}
 					onChange={(event) => handleModalInputChange(event, "password")}
+				/>
+				<label htmlFor="confirmPassword">Confirm Password:</label>
+				<input
+					name="confirmPassword"
+					type="text"
+					value={confirmPasswordInput}
+					onChange={(event) => handleModalInputChange(event, "confirmPassword")}
 				/>
 				<AuthBtnsContainer>
 					{/* TODO - fix these buttons and submit function */}
 					<button type="submit" onClick={handleSubmit}>
 						Log-in
 					</button>
-					<button type="submit" onClick={handleSubmit}>
+					<button
+						type="button"
+						onClick={(event) => handleSubmit(event, "register")}
+					>
 						Register
 					</button>
-					<button className="guestBtn" type="submit" onClick={handleSubmit}>
+					<button className="guestBtn" type="button" onClick={handleSubmit}>
 						Play as Guest
 					</button>
 				</AuthBtnsContainer>
