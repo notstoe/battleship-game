@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { AuthContext } from "./contexts/AuthContext";
+import { AuthRulesContext } from "./contexts/AuthContext";
 import { GameRulesProvider } from "./contexts/GameContext";
 
 import Board from "./Components/Board";
@@ -82,7 +82,7 @@ const ContentWrapper = styled(motion.div)`
 `;
 
 function App() {
-	const { showPage } = useContext(AuthContext);
+	const { showPage } = useContext(AuthRulesContext);
 
 	const contentVariants = {
 		hidden: { opacity: 0 },
