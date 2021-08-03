@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { GameRulesContext } from "../contexts/GameContext";
-import { AuthContext } from "../contexts/AuthContext";
+import { AuthRulesContext } from "../contexts/AuthContext";
 
 import { motion } from "framer-motion";
 import styled from "styled-components";
@@ -99,7 +99,7 @@ function Board({ player }) {
 		counter,
 	} = useContext(GameRulesContext);
 
-	const { playersCtx } = useContext(AuthContext);
+	const { playersCtx, currentUser } = useContext(AuthRulesContext);
 
 	const btnVariants = {
 		hidden: { x: "-30vh", opacity: 0 },
@@ -184,12 +184,16 @@ function Board({ player }) {
 		);
 	});
 
+	let email = currentUser.email;
+	let nickname = email.slice(0, email.indexOf("@"));
+
 	if (player === "human") {
 		return (
 			<BoardWrapper>
 				<h2>
-					{playersCtx.human ? playersCtx.human.getName() + ": " : "Player: "}
-					<span>{playersCtx.human ? playersCtx.human.getScore() : "0"}</span>
+					{nickname + ": "}
+					{/* TODO - save score to state, with current user and retrieve from firebase on login */}
+					<span>{"0"}</span>
 				</h2>
 				<IndividualBoard>{boardDivsHuman}</IndividualBoard>
 				<motion.footer
