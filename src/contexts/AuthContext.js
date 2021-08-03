@@ -1,13 +1,18 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 
 import PlayerModal from "../Components/PlayerModal";
 
-// import { auth } from "../firebase";
+import { auth } from "../firebase";
+import playerFactory from "../factories/playerFactory";
 
-export const AuthContext = createContext({});
+export const AuthRulesContext = createContext({});
 
 export function AuthContextProvider({ children }) {
 	const [playersCtx, setPlayersCtx] = useState({});
+	const [currentUser, setCurrentUser] = useState({});
+
+	const [loadingRequest, setLoadingRequest] = useState(false);
+	const [loadingUser, setLoadingUser] = useState(true);
 
 	const [showModal, setShowModal] = useState(true);
 	const [showPage, setShowPage] = useState(false);
@@ -27,11 +32,20 @@ export function AuthContextProvider({ children }) {
 			setConfirmPasswordInput(event.target.value);
 	}
 
-	// function signup(email, password) {
-	// 	auth.createUserWithEmailAndPassword();
-	// }
+	function signup(email, password) {
+		return auth.createUserWithEmailAndPassword(email, password);
+	}
 
-	function handleSubmit(e, btnAction) {
+	useEffect(() => {
+		const unsubscribe = auth.onAuthStateChanged((user) => {
+			setCurrentUser(user);
+			setLoadingUser(false);
+
+			return unsubscribe;
+		});
+	}, []);
+
+	async function handleSubmit(e, btnAction) {
 		e.preventDefault();
 		switch (btnAction) {
 			case "register":
@@ -44,48 +58,47 @@ export function AuthContextProvider({ children }) {
 					return;
 				}
 				if (passwordInput !== confirmPasswordInput) {
-					alert("Passwords don't match!");
+					alert("Passwords do not match");
 					return;
 				}
+
+				try {
+					setLoadingRequest(true);
+					await signup(emailInput, passwordInput);
+				} catch {
+					alert(
+						"Failed to create an account, double check your inputs and try again"
+					);
+					return;
+				}
+
 				toggleModal();
 				setShowPage(true);
+				setLoadingRequest(false);
+
+				const humanPlayer = playerFactory("Player");
+				const playerAI = playerFactory("AI");
+
+				const newPlayers = { humanPlayer, playerAI };
+				setPlayersCtx(newPlayers);
 				break;
 
 			default:
 				break;
 		}
-		// if (isEmpty(playersCtx)) {
-		// 	// TODO - fix submit function
-		// 	//first Modal, creates new players
-		// 	let human;
-		// 	if (modalInput.length === 0) {
-		// 		human = playerFactory("Anonymous");
-		// 	} else {
-		// 		human = playerFactory(modalInput);
-		// 	}
-		// 	const playerAI = playerFactory("AI");
-		// 	const newPlayers = { human, playerAI };
-		// 	setPlayersCtx(newPlayers);
-		// } else {
-		// 	//changing name on modal
-		// 	let newPlayersCtx = { ...playersCtx };
-		// 	newPlayersCtx.human.setName(
-		// 		modalInput.length === 0 ? "Anonymous" : modalInput
-		// 	);
-		// 	setPlayersCtx(newPlayersCtx);
-		// }
 	}
 
 	return (
-		<AuthContext.Provider
+		<AuthRulesContext.Provider
 			value={{
 				setEmailInput,
 				setPasswordInput,
 				setConfirmPasswordInput,
-				setPlayersCtx,
 				handleSubmit,
 				handleModalInputChange,
 				toggleModal,
+				currentUser,
+				loadingRequest,
 				showModal,
 				showPage,
 				emailInput,
@@ -94,8 +107,9 @@ export function AuthContextProvider({ children }) {
 				playersCtx,
 			}}
 		>
-			{children}
+			{/* Don't render the app until the current user is set (loadingUser is false) */}
+			{!loadingUser && children}
 			{showModal && <PlayerModal />}
-		</AuthContext.Provider>
+		</AuthRulesContext.Provider>
 	);
 }

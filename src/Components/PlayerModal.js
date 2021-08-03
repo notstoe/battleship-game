@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { AuthContext } from "../contexts/AuthContext";
+import { AuthRulesContext } from "../contexts/AuthContext";
 
 import styled from "styled-components";
 import { motion } from "framer-motion";
@@ -29,7 +29,7 @@ const Overlay = styled(motion.div)`
 		background: var(--bg-blue);
 
 		width: 90%;
-		height: 32rem;
+		height: 34rem;
 		max-width: 480px;
 		padding: 1.8rem 1rem;
 
@@ -115,8 +115,9 @@ export default function PlayerModal() {
 		emailInput,
 		passwordInput,
 		confirmPasswordInput,
+		loadingRequest,
 		handleSubmit,
-	} = useContext(AuthContext);
+	} = useContext(AuthRulesContext);
 
 	const overlayVariants = {
 		hidden: { opacity: 0 },
@@ -158,17 +159,25 @@ export default function PlayerModal() {
 				/>
 				<AuthBtnsContainer>
 					{/* TODO - fix these buttons and submit function */}
-					<button type="submit" onClick={handleSubmit}>
-						Log-in
-					</button>
 					<button
-						type="button"
+						type="submit"
 						onClick={(event) => handleSubmit(event, "register")}
 					>
 						Register
 					</button>
-					<button className="guestBtn" type="button" onClick={handleSubmit}>
-						Play as Guest
+					<button
+						type="button"
+						onClick={(event) => handleSubmit(event, "Anonymous")}
+					>
+						Anonymous
+					</button>
+					<button
+						disabled={loadingRequest}
+						className="guestBtn"
+						type="button"
+						onClick={handleSubmit}
+					>
+						Already have an account? Log-in
 					</button>
 				</AuthBtnsContainer>
 			</motion.form>

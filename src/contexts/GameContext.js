@@ -11,12 +11,14 @@ import gameBoard from "../factories/gameBoard";
 import Ship from "../factories/ship";
 
 import { getRandomInt, getRandomXorY } from "../supportFunctions/getRandomInt";
-import { AuthContext } from "./AuthContext";
+import { AuthRulesContext } from "./AuthContext";
 
 export const GameRulesContext = createContext({});
 
 export function GameRulesProvider({ children }) {
-	const { toggleModal, playersCtx, setPlayersCtx } = useContext(AuthContext);
+	const { toggleModal, playersCtx, setPlayersCtx } = useContext(
+		AuthRulesContext
+	);
 
 	const boardFunctionsHuman = useRef(gameBoard()); //useRef to prevent variable being re-defined everytime component re-renders
 	const [stateBoardHuman, setStateBoardHuman] = useState(
@@ -51,8 +53,8 @@ export function GameRulesProvider({ children }) {
 	}
 
 	function handleChangeNameBtnClick() {
-		//TODO - change this function and btn into logout
-		toggleModal();
+		//TODO - change this function and btn into logout, move it to authContext
+		// toggleModal();
 	}
 
 	function handleResetBtnClick() {
