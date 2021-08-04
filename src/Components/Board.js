@@ -1,6 +1,9 @@
 import React, { useContext } from "react";
+
 import { GameRulesContext } from "../contexts/GameContext";
 import { AuthRulesContext } from "../contexts/AuthContext";
+
+import isEmpty from "../supportFunctions/isEmpty";
 
 import { motion } from "framer-motion";
 import styled from "styled-components";
@@ -94,12 +97,14 @@ function Board({ player }) {
 		stateBoardAI,
 		handleBoardClick,
 		handleOrientationBtnClick,
-		handleChangeNameBtnClick,
 		handleResetBtnClick,
+		resetGame,
 		counter,
 	} = useContext(GameRulesContext);
 
-	const { playersCtx, currentUser } = useContext(AuthRulesContext);
+	const { currentUser, handleLogout, playersCtx } = useContext(
+		AuthRulesContext
+	);
 
 	const btnVariants = {
 		hidden: { x: "-30vh", opacity: 0 },
@@ -184,8 +189,13 @@ function Board({ player }) {
 		);
 	});
 
-	let email = currentUser.email;
-	let nickname = email.slice(0, email.indexOf("@"));
+	let email, nickname;
+	if (!isEmpty(currentUser)) {
+		email = currentUser.email;
+		nickname = email.slice(0, email.indexOf("@"));
+	} else {
+		nickname = "Anonymous";
+	}
 
 	if (player === "human") {
 		return (
@@ -212,9 +222,12 @@ function Board({ player }) {
 								variants={btnsInGameVariants}
 								initial="hidden"
 								animate="visible"
-								onClick={handleChangeNameBtnClick}
+								// if logout was sucessful, reset all game parameters
+								onClick={() => {
+									handleLogout("anonymous") && resetGame();
+								}}
 							>
-								Change Name
+								Log-Out
 							</motion.button>
 							<motion.button
 								variants={btnsInGameVariants}

@@ -42,13 +42,21 @@ export function AuthContextProvider({ children }) {
 		return auth.createUserWithEmailAndPassword(email, password);
 	}
 
+	function login(email, password) {
+		return auth.signInWithEmailAndPassword(email, password);
+	}
+
+	function logout() {
+		return auth.signOut();
+	}
+
 	useEffect(() => {
 		const unsubscribe = auth.onAuthStateChanged((user) => {
 			setCurrentUser(user);
 			setLoadingUser(false);
 
 			// on componentDidMount it adds the listener authStateChanged which saves the current user into state...
-			// on component unmount it removes the listener (return from the function, shutsdown the listener)
+			// on componentWillUnmount it removes the listener (return from the function, shutsdown the listener)
 
 			return unsubscribe;
 		});
@@ -56,6 +64,10 @@ export function AuthContextProvider({ children }) {
 
 	async function handleSubmit(e, btnAction) {
 		e.preventDefault();
+		let humanPlayer;
+		let playerAI;
+		let newPlayers;
+
 		switch (btnAction) {
 			case "register":
 				if (emailInput.search("@") < 0) {
@@ -78,6 +90,7 @@ export function AuthContextProvider({ children }) {
 					alert(
 						"Failed to create an account, email invalid or already in use... Try again"
 					);
+					setLoadingRequest(false);
 					return;
 				}
 
@@ -85,18 +98,68 @@ export function AuthContextProvider({ children }) {
 				setShowPage(true);
 				setLoadingRequest(false);
 
-				const humanPlayer = playerFactory("Player");
-				const playerAI = playerFactory("AI");
+				humanPlayer = playerFactory("Player");
+				playerAI = playerFactory("AI");
 
-				const newPlayers = { humanPlayer, playerAI };
+				newPlayers = { humanPlayer, playerAI };
+				setPlayersCtx(newPlayers);
+				break;
+
+			case "login":
+				try {
+					setLoadingRequest(true);
+					await login(emailInput, passwordInput);
+				} catch {
+					alert("Failed to sign in... Try again");
+					setLoadingRequest(false);
+					return;
+				}
+
+				toggleModal();
+				setShowPage(true);
+				setLoadingRequest(false);
+
+				humanPlayer = playerFactory("Player");
+				playerAI = playerFactory("AI");
+
+				newPlayers = { humanPlayer, playerAI };
+				setPlayersCtx(newPlayers);
+				break;
+
+			case "anonymous":
+				toggleModal();
+				setShowPage(true);
+
+				humanPlayer = playerFactory("Player");
+				playerAI = playerFactory("AI");
+
+				newPlayers = { humanPlayer, playerAI };
 				setPlayersCtx(newPlayers);
 				break;
 
 			default:
+				console.alert("Something went wrong. Refresh the page!");
 				break;
 		}
 	}
 
+	async function handleLogout(player) {
+		if (player !== "anonymous") {
+			try {
+				await logout();
+			} catch {
+				alert("Failed to log out... Try again");
+				return false;
+			}
+		}
+
+		setShowPage(false);
+		toggleModal();
+		setCurrentUser({});
+		setPlayersCtx({});
+
+		return true;
+	}
 	return (
 		<AuthRulesContext.Provider
 			value={{
@@ -105,6 +168,7 @@ export function AuthContextProvider({ children }) {
 				setConfirmPasswordInput,
 				handleSubmit,
 				handleModalInputChange,
+				handleLogout,
 				toggleModal,
 				toggleLogin,
 				hasAccount,

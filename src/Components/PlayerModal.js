@@ -160,17 +160,17 @@ export default function PlayerModal() {
 						<button
 							type="submit"
 							onClick={(event) => handleSubmit(event, "login")}
+							disabled={loadingRequest}
 						>
 							Log-in
 						</button>
 						<button
 							type="button"
-							onClick={(event) => handleSubmit(event, "Anonymous")}
+							onClick={(event) => handleSubmit(event, "anonymous")}
 						>
 							Anonymous
 						</button>
 						<button
-							disabled={loadingRequest}
 							className="toggleLoginBtn"
 							type="button"
 							onClick={toggleLogin}
@@ -183,7 +183,7 @@ export default function PlayerModal() {
 		);
 	};
 
-	const singupForm = () => {
+	const signupForm = () => {
 		return (
 			<Overlay variants={overlayVariants} initial="hidden" animate="visible">
 				<motion.form variants={modalVariants}>
@@ -214,18 +214,18 @@ export default function PlayerModal() {
 						{/* TODO - fix these buttons and submit function */}
 						<button
 							type="submit"
+							disabled={loadingRequest}
 							onClick={(event) => handleSubmit(event, "register")}
 						>
 							Register
 						</button>
 						<button
 							type="button"
-							onClick={(event) => handleSubmit(event, "Anonymous")}
+							onClick={(event) => handleSubmit(event, "anonymous")}
 						>
 							Anonymous
 						</button>
 						<button
-							disabled={loadingRequest}
 							className="toggleLoginBtn"
 							type="button"
 							onClick={toggleLogin}
@@ -238,5 +238,5 @@ export default function PlayerModal() {
 		);
 	};
 
-	return hasAccount ? loginForm() : singupForm();
+	return hasAccount ? loginForm() : signupForm();
 }

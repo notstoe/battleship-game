@@ -16,9 +16,7 @@ import { AuthRulesContext } from "./AuthContext";
 export const GameRulesContext = createContext({});
 
 export function GameRulesProvider({ children }) {
-	const { toggleModal, playersCtx, setPlayersCtx } = useContext(
-		AuthRulesContext
-	);
+	const { playersCtx, setPlayersCtx } = useContext(AuthRulesContext);
 
 	const boardFunctionsHuman = useRef(gameBoard()); //useRef to prevent variable being re-defined everytime component re-renders
 	const [stateBoardHuman, setStateBoardHuman] = useState(
@@ -52,12 +50,7 @@ export function GameRulesProvider({ children }) {
 		orientation === "x" ? setOrientation("y") : setOrientation("x");
 	}
 
-	function handleChangeNameBtnClick() {
-		//TODO - change this function and btn into logout, move it to authContext
-		// toggleModal();
-	}
-
-	function handleResetBtnClick() {
+	function resetGame() {
 		boardFunctionsHuman.current = gameBoard();
 		setStateBoardHuman(boardFunctionsHuman.current.getBoard());
 
@@ -75,6 +68,15 @@ export function GameRulesProvider({ children }) {
 		setIsGameOver(false);
 		setRoundWinner("");
 		setMemoryAI({});
+	}
+
+	function handleResetBtnClick() {
+		if (shipsLeftHuman < 5) {
+			alert("Can't reset after your ships have been sunk!");
+			return;
+		}
+
+		resetGame();
 	}
 
 	function handleBoardClick(boardOwner, rowIndex, colIndex) {
@@ -326,9 +328,9 @@ export function GameRulesProvider({ children }) {
 		<GameRulesContext.Provider
 			value={{
 				handleOrientationBtnClick,
-				handleChangeNameBtnClick,
 				handleResetBtnClick,
 				handleBoardClick,
+				resetGame,
 				stateBoardHuman,
 				stateBoardAI,
 				counter,
