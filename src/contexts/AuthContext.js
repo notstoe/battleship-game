@@ -22,6 +22,7 @@ export function AuthContextProvider({ children }) {
 	const [confirmPasswordInput, setConfirmPasswordInput] = useState("");
 
 	const [hasAccount, setHasAccount] = useState(false);
+	const [passwordReset, setPasswordReset] = useState(false);
 
 	function toggleModal() {
 		setShowModal(!showModal);
@@ -29,6 +30,10 @@ export function AuthContextProvider({ children }) {
 
 	function toggleLogin() {
 		setHasAccount(!hasAccount);
+	}
+
+	function togglePasswordReset() {
+		setPasswordReset(!passwordReset);
 	}
 
 	function handleModalInputChange(event, inputName) {
@@ -48,6 +53,10 @@ export function AuthContextProvider({ children }) {
 
 	function logout() {
 		return auth.signOut();
+	}
+
+	function resetPassword(email) {
+		return auth.sendPasswordResetEmail(email);
 	}
 
 	useEffect(() => {
@@ -129,12 +138,25 @@ export function AuthContextProvider({ children }) {
 			case "anonymous":
 				toggleModal();
 				setShowPage(true);
+				setCurrentUser({});
 
 				humanPlayer = playerFactory("Player");
 				playerAI = playerFactory("AI");
 
 				newPlayers = { humanPlayer, playerAI };
 				setPlayersCtx(newPlayers);
+				break;
+
+			case "resetPassword":
+				try {
+					setLoadingRequest(true);
+					await resetPassword(emailInput);
+					alert("Check your inbox for further instructions");
+				} catch {
+					alert("Failed to send reset password email... Try again");
+				}
+
+				setLoadingRequest(false);
 				break;
 
 			default:
@@ -166,11 +188,13 @@ export function AuthContextProvider({ children }) {
 				setEmailInput,
 				setPasswordInput,
 				setConfirmPasswordInput,
+				togglePasswordReset,
 				handleSubmit,
 				handleModalInputChange,
 				handleLogout,
 				toggleModal,
 				toggleLogin,
+				passwordReset,
 				hasAccount,
 				currentUser,
 				loadingRequest,

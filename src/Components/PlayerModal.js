@@ -29,7 +29,7 @@ const Overlay = styled(motion.div)`
 		background: var(--bg-blue);
 
 		width: 90%;
-		height: 34rem;
+		height: 36.5rem;
 		max-width: 480px;
 		padding: 1.8rem 1rem;
 
@@ -69,8 +69,18 @@ const AuthBtnsContainer = styled.div`
 	column-gap: 1.8rem;
 	max-width: 100%;
 
+	.forgotPasswordBtn {
+		grid-row: 2;
+		grid-column: 1 / 3;
+	}
+
 	.toggleLoginBtn {
 		grid-row: 2;
+		grid-column: 1 / 3;
+	}
+
+	.toggleSignUpBtn {
+		grid-row: 3;
 		grid-column: 1 / 3;
 	}
 
@@ -121,6 +131,8 @@ export default function PlayerModal() {
 		handleSubmit,
 		hasAccount,
 		toggleLogin,
+		passwordReset,
+		togglePasswordReset,
 	} = useContext(AuthRulesContext);
 
 	const overlayVariants = {
@@ -140,7 +152,7 @@ export default function PlayerModal() {
 	const loginForm = () => {
 		return (
 			<Overlay variants={overlayVariants} initial="hidden" animate="visible">
-				<motion.form variants={modalVariants} style={{ height: "30rem" }}>
+				<motion.form variants={modalVariants} style={{ height: "34rem" }}>
 					<label htmlFor="email">Email:</label>
 					<input
 						name="email"
@@ -151,16 +163,15 @@ export default function PlayerModal() {
 					<label htmlFor="password">Password:</label>
 					<input
 						name="password"
-						type="text"
+						type="password"
 						value={passwordInput}
 						onChange={(event) => handleModalInputChange(event, "password")}
 					/>
 					<AuthBtnsContainer>
-						{/* TODO - fix these buttons and submit function */}
 						<button
 							type="submit"
-							onClick={(event) => handleSubmit(event, "login")}
 							disabled={loadingRequest}
+							onClick={(event) => handleSubmit(event, "login")}
 						>
 							Log-in
 						</button>
@@ -171,11 +182,18 @@ export default function PlayerModal() {
 							Anonymous
 						</button>
 						<button
-							className="toggleLoginBtn"
+							className="forgotPasswordBtn"
+							type="button"
+							onClick={togglePasswordReset}
+						>
+							I forgot my password!
+						</button>
+						<button
+							className="toggleSignUpBtn"
 							type="button"
 							onClick={toggleLogin}
 						>
-							Need an account? Sign-up
+							Need an account?
 						</button>
 					</AuthBtnsContainer>
 				</motion.form>
@@ -197,21 +215,20 @@ export default function PlayerModal() {
 					<label htmlFor="password">Password:</label>
 					<input
 						name="password"
-						type="text"
+						type="password"
 						value={passwordInput}
 						onChange={(event) => handleModalInputChange(event, "password")}
 					/>
 					<label htmlFor="confirmPassword">Confirm Password:</label>
 					<input
 						name="confirmPassword"
-						type="text"
+						type="password"
 						value={confirmPasswordInput}
 						onChange={(event) =>
 							handleModalInputChange(event, "confirmPassword")
 						}
 					/>
 					<AuthBtnsContainer>
-						{/* TODO - fix these buttons and submit function */}
 						<button
 							type="submit"
 							disabled={loadingRequest}
@@ -230,7 +247,7 @@ export default function PlayerModal() {
 							type="button"
 							onClick={toggleLogin}
 						>
-							Already have an account? Log-in
+							Already have an account?
 						</button>
 					</AuthBtnsContainer>
 				</motion.form>
@@ -238,5 +255,49 @@ export default function PlayerModal() {
 		);
 	};
 
-	return hasAccount ? loginForm() : signupForm();
+	const passwordResetForm = () => {
+		return (
+			<Overlay variants={overlayVariants} initial="hidden" animate="visible">
+				<motion.form
+					variants={modalVariants}
+					style={{
+						height: "20rem",
+						maxWidth: "420px",
+						justifyContent: "space-between",
+					}}
+				>
+					<label htmlFor="email">Email used:</label>
+					<input
+						name="email"
+						type="text"
+						value={emailInput}
+						onChange={(event) => handleModalInputChange(event, "email")}
+					/>
+					<AuthBtnsContainer>
+						<button
+							type="submit"
+							disabled={loadingRequest}
+							onClick={(event) => handleSubmit(event, "resetPassword")}
+							style={{ gridRow: "1", gridColumn: "1/3" }}
+						>
+							Send reset email
+						</button>
+						<button
+							className="toggleLoginBtn"
+							type="button"
+							onClick={togglePasswordReset}
+						>
+							Go back to Log-in
+						</button>
+					</AuthBtnsContainer>
+				</motion.form>
+			</Overlay>
+		);
+	};
+
+	return passwordReset
+		? passwordResetForm()
+		: hasAccount
+		? loginForm()
+		: signupForm();
 }
