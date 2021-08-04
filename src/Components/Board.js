@@ -202,7 +202,7 @@ function Board({ player }) {
 			<BoardWrapper>
 				<h2>
 					{nickname + ": "}
-					{/* TODO - save score to state, with current user and retrieve from firebase on login */}
+					{/* TODO - save scores to state, with current user and retrieve from firebase on login */}
 					<span>{"0"}</span>
 				</h2>
 				<IndividualBoard>{boardDivsHuman}</IndividualBoard>
@@ -254,6 +254,7 @@ function Board({ player }) {
 					</span>
 				</h2>
 				<IndividualBoard>{boardDivsAI}</IndividualBoard>
+				{/* TODO - add leaderboards modal btn to the bottom of AI's board */}
 				<footer className="emptyFooter" />
 			</BoardWrapper>
 		);
