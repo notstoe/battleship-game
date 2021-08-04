@@ -38,6 +38,8 @@ const Overlay = styled(motion.div)`
 		border-radius: 72px;
 
 		text-align: center;
+
+		transition: all 0.15s ease-out;
 	}
 
 	label {
@@ -67,7 +69,7 @@ const AuthBtnsContainer = styled.div`
 	column-gap: 1.8rem;
 	max-width: 100%;
 
-	.guestBtn {
+	.toggleLoginBtn {
 		grid-row: 2;
 		grid-column: 1 / 3;
 	}
@@ -117,6 +119,8 @@ export default function PlayerModal() {
 		confirmPasswordInput,
 		loadingRequest,
 		handleSubmit,
+		hasAccount,
+		toggleLogin,
 	} = useContext(AuthRulesContext);
 
 	const overlayVariants = {
@@ -133,54 +137,106 @@ export default function PlayerModal() {
 		},
 	};
 
-	return (
-		<Overlay variants={overlayVariants} initial="hidden" animate="visible">
-			<motion.form variants={modalVariants}>
-				<label htmlFor="email">Email:</label>
-				<input
-					name="email"
-					type="text"
-					value={emailInput}
-					onChange={(event) => handleModalInputChange(event, "email")}
-				/>
-				<label htmlFor="password">Password:</label>
-				<input
-					name="password"
-					type="text"
-					value={passwordInput}
-					onChange={(event) => handleModalInputChange(event, "password")}
-				/>
-				<label htmlFor="confirmPassword">Confirm Password:</label>
-				<input
-					name="confirmPassword"
-					type="text"
-					value={confirmPasswordInput}
-					onChange={(event) => handleModalInputChange(event, "confirmPassword")}
-				/>
-				<AuthBtnsContainer>
-					{/* TODO - fix these buttons and submit function */}
-					<button
-						type="submit"
-						onClick={(event) => handleSubmit(event, "register")}
-					>
-						Register
-					</button>
-					<button
-						type="button"
-						onClick={(event) => handleSubmit(event, "Anonymous")}
-					>
-						Anonymous
-					</button>
-					<button
-						disabled={loadingRequest}
-						className="guestBtn"
-						type="button"
-						onClick={handleSubmit}
-					>
-						Already have an account? Log-in
-					</button>
-				</AuthBtnsContainer>
-			</motion.form>
-		</Overlay>
-	);
+	const loginForm = () => {
+		return (
+			<Overlay variants={overlayVariants} initial="hidden" animate="visible">
+				<motion.form variants={modalVariants} style={{ height: "30rem" }}>
+					<label htmlFor="email">Email:</label>
+					<input
+						name="email"
+						type="text"
+						value={emailInput}
+						onChange={(event) => handleModalInputChange(event, "email")}
+					/>
+					<label htmlFor="password">Password:</label>
+					<input
+						name="password"
+						type="text"
+						value={passwordInput}
+						onChange={(event) => handleModalInputChange(event, "password")}
+					/>
+					<AuthBtnsContainer>
+						{/* TODO - fix these buttons and submit function */}
+						<button
+							type="submit"
+							onClick={(event) => handleSubmit(event, "login")}
+						>
+							Log-in
+						</button>
+						<button
+							type="button"
+							onClick={(event) => handleSubmit(event, "Anonymous")}
+						>
+							Anonymous
+						</button>
+						<button
+							disabled={loadingRequest}
+							className="toggleLoginBtn"
+							type="button"
+							onClick={toggleLogin}
+						>
+							Need an account? Sign-up
+						</button>
+					</AuthBtnsContainer>
+				</motion.form>
+			</Overlay>
+		);
+	};
+
+	const singupForm = () => {
+		return (
+			<Overlay variants={overlayVariants} initial="hidden" animate="visible">
+				<motion.form variants={modalVariants}>
+					<label htmlFor="email">Email:</label>
+					<input
+						name="email"
+						type="text"
+						value={emailInput}
+						onChange={(event) => handleModalInputChange(event, "email")}
+					/>
+					<label htmlFor="password">Password:</label>
+					<input
+						name="password"
+						type="text"
+						value={passwordInput}
+						onChange={(event) => handleModalInputChange(event, "password")}
+					/>
+					<label htmlFor="confirmPassword">Confirm Password:</label>
+					<input
+						name="confirmPassword"
+						type="text"
+						value={confirmPasswordInput}
+						onChange={(event) =>
+							handleModalInputChange(event, "confirmPassword")
+						}
+					/>
+					<AuthBtnsContainer>
+						{/* TODO - fix these buttons and submit function */}
+						<button
+							type="submit"
+							onClick={(event) => handleSubmit(event, "register")}
+						>
+							Register
+						</button>
+						<button
+							type="button"
+							onClick={(event) => handleSubmit(event, "Anonymous")}
+						>
+							Anonymous
+						</button>
+						<button
+							disabled={loadingRequest}
+							className="toggleLoginBtn"
+							type="button"
+							onClick={toggleLogin}
+						>
+							Already have an account? Log-in
+						</button>
+					</AuthBtnsContainer>
+				</motion.form>
+			</Overlay>
+		);
+	};
+
+	return hasAccount ? loginForm() : singupForm();
 }

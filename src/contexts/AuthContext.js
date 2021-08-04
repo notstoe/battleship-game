@@ -21,8 +21,14 @@ export function AuthContextProvider({ children }) {
 	const [passwordInput, setPasswordInput] = useState("");
 	const [confirmPasswordInput, setConfirmPasswordInput] = useState("");
 
+	const [hasAccount, setHasAccount] = useState(false);
+
 	function toggleModal() {
 		setShowModal(!showModal);
+	}
+
+	function toggleLogin() {
+		setHasAccount(!hasAccount);
 	}
 
 	function handleModalInputChange(event, inputName) {
@@ -40,6 +46,9 @@ export function AuthContextProvider({ children }) {
 		const unsubscribe = auth.onAuthStateChanged((user) => {
 			setCurrentUser(user);
 			setLoadingUser(false);
+
+			// on componentDidMount it adds the listener authStateChanged which saves the current user into state...
+			// on component unmount it removes the listener (return from the function, shutsdown the listener)
 
 			return unsubscribe;
 		});
@@ -67,7 +76,7 @@ export function AuthContextProvider({ children }) {
 					await signup(emailInput, passwordInput);
 				} catch {
 					alert(
-						"Failed to create an account, double check your inputs and try again"
+						"Failed to create an account, email invalid or already in use... Try again"
 					);
 					return;
 				}
@@ -97,6 +106,8 @@ export function AuthContextProvider({ children }) {
 				handleSubmit,
 				handleModalInputChange,
 				toggleModal,
+				toggleLogin,
+				hasAccount,
 				currentUser,
 				loadingRequest,
 				showModal,
