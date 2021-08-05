@@ -3,8 +3,6 @@ import React, { useContext } from "react";
 import { GameRulesContext } from "../contexts/GameContext";
 import { AuthRulesContext } from "../contexts/AuthContext";
 
-import isEmpty from "../supportFunctions/isEmpty";
-
 import { motion } from "framer-motion";
 import styled from "styled-components";
 
@@ -30,7 +28,8 @@ const BoardWrapper = styled.div`
 		display: flex;
 		justify-content: space-between;
 
-		.rotateBtn {
+		.rotateBtn,
+		.leaderboardsBtn {
 			margin: 1rem auto 0 auto;
 		}
 	}
@@ -60,10 +59,6 @@ const BoardWrapper = styled.div`
 			transform: scale(0.97);
 		}
 	}
-
-	.emptyFooter {
-		padding-bottom: 3.8rem;
-	}
 `;
 
 const IndividualBoard = styled.div`
@@ -88,6 +83,14 @@ const IndividualBoard = styled.div`
 		line-height: 2rem;
 
 		transition: all 0.15s ease-out;
+
+		/* not allowing text selection inside the board */
+		-webkit-touch-callout: none; /* iOS Safari */
+		-webkit-user-select: none; /* Safari */
+		-khtml-user-select: none; /* Konqueror HTML */
+		-moz-user-select: none; /* Old versions of Firefox */
+		-ms-user-select: none; /* Internet Explorer/Edge */
+		user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
 	}
 `;
 
@@ -102,12 +105,22 @@ function Board({ player }) {
 		counter,
 	} = useContext(GameRulesContext);
 
-	const { currentUser, handleLogout, playersCtx } = useContext(
+	const { emailInput, handleLogout, playersCtx, loadLeaderboards } = useContext(
 		AuthRulesContext
 	);
 
 	const btnVariants = {
 		hidden: { x: "-30vh", opacity: 0 },
+		visible: {
+			opacity: 1,
+			x: 0,
+			transition: { type: "spring", duration: 1, delay: 2 },
+		},
+		exit: { opacity: 0, transition: { duration: 0.5 } },
+	};
+
+	const btnLeaderboardsVariants = {
+		hidden: { x: "30vh", opacity: 0 },
 		visible: {
 			opacity: 1,
 			x: 0,
@@ -189,10 +202,10 @@ function Board({ player }) {
 		);
 	});
 
-	let email, nickname;
-	if (!isEmpty(currentUser)) {
-		email = currentUser.email;
-		nickname = email.slice(0, email.indexOf("@"));
+	let nickname;
+
+	if (emailInput.length > 0) {
+		nickname = emailInput.slice(0, emailInput.indexOf("@"));
 	} else {
 		nickname = "Anonymous";
 	}
@@ -202,8 +215,9 @@ function Board({ player }) {
 			<BoardWrapper>
 				<h2>
 					{nickname + ": "}
-					{/* TODO - save scores to state, with current user and retrieve from firebase on login */}
-					<span>{"0"}</span>
+					<span>
+						{playersCtx.humanPlayer && playersCtx.humanPlayer.getScore()}
+					</span>
 				</h2>
 				<IndividualBoard>{boardDivsHuman}</IndividualBoard>
 				<motion.footer
@@ -246,16 +260,20 @@ function Board({ player }) {
 		return (
 			<BoardWrapper>
 				<h2>
-					{playersCtx.playerAI
-						? playersCtx.playerAI.getName() + ": "
-						: "Player: "}
-					<span>
-						{playersCtx.playerAI ? playersCtx.playerAI.getScore() : "0"}
-					</span>
+					{"AI: "}
+					<span>{playersCtx.playerAI && playersCtx.playerAI.getScore()}</span>
 				</h2>
 				<IndividualBoard>{boardDivsAI}</IndividualBoard>
-				{/* TODO - add leaderboards modal btn to the bottom of AI's board */}
-				<footer className="emptyFooter" />
+				<motion.footer
+					variants={btnLeaderboardsVariants}
+					initial="hidden"
+					animate="visible"
+					exit="exit"
+				>
+					<button className="leaderboardsBtn" onClick={loadLeaderboards}>
+						Leaderboards
+					</button>
+				</motion.footer>
 			</BoardWrapper>
 		);
 	}
