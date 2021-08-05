@@ -64,7 +64,6 @@ const Overlay = styled(motion.div)`
 		}
 
 		:active {
-			/* box-shadow: 0px 0px 10px 3px rgba(0, 0, 0, 0.4); */
 			border: 1px inset var(--highlight-yellow);
 			transform: scale(0.97);
 		}
@@ -72,7 +71,7 @@ const Overlay = styled(motion.div)`
 `;
 
 export default function GameOverModal() {
-	const { handleResetBtnClick, roundWinner } = useContext(GameRulesContext);
+	const { resetGame, roundWinner } = useContext(GameRulesContext);
 
 	const overlayVariants = {
 		hidden: { opacity: 0 },
@@ -91,9 +90,9 @@ export default function GameOverModal() {
 	return (
 		<Overlay variants={overlayVariants} initial="hidden" animate="visible">
 			<motion.div variants={modalVariants} className="modal">
-				<h1>{roundWinner} wins!</h1>
+				<h1>{roundWinner} Won!</h1>
 				<h2>Game Over!</h2>
-				<button onClick={handleResetBtnClick}>Reset</button>
+				<button onClick={resetGame}>Reset</button>
 			</motion.div>
 		</Overlay>
 	);
