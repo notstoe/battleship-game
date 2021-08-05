@@ -1,8 +1,10 @@
 import React, { createContext, useEffect, useState } from "react";
 
 import PlayerModal from "../Components/PlayerModal";
+import LeaderboardsModal from "../Components/LeaderboardsModal";
 
-import { auth } from "../firebase";
+import { auth, db } from "../firebase";
+
 import playerFactory from "../factories/playerFactory";
 
 export const AuthRulesContext = createContext({});
@@ -16,6 +18,9 @@ export function AuthContextProvider({ children }) {
 
 	const [showModal, setShowModal] = useState(true);
 	const [showPage, setShowPage] = useState(false);
+	const [showLeaderboards, setShowLeaderboards] = useState(false);
+
+	const [savedDocs, setSavedDocs] = useState([]);
 
 	const [emailInput, setEmailInput] = useState("");
 	const [passwordInput, setPasswordInput] = useState("");
@@ -26,6 +31,64 @@ export function AuthContextProvider({ children }) {
 
 	function toggleModal() {
 		setShowModal(!showModal);
+	}
+
+	function readFromDb(nameCollection, specificId) {
+		if (!specificId) {
+			return db.collection(nameCollection).orderBy("score", "desc").get();
+		} else {
+			return db.collection(nameCollection).doc(specificId).get();
+		}
+	}
+
+	function writeToDb(uemail, obj) {
+		return db.collection("leaderboards").doc(uemail).set(obj);
+	}
+
+	async function saveScores() {
+		const nickname = emailInput.slice(0, emailInput.indexOf("@"));
+
+		try {
+			await writeToDb(emailInput, {
+				nickname: nickname,
+				email: emailInput,
+				score: playersCtx.humanPlayer.getScore(),
+				scoreAI: playersCtx.playerAI.getScore(),
+			});
+		} catch (error) {
+			console.warn("Failed to save results...", error.message);
+		}
+	}
+
+	async function getPreviousScores(uemail) {
+		try {
+			const userDoc = await readFromDb("leaderboards", uemail);
+			return { score: userDoc.data().score, scoreAI: userDoc.data().scoreAI };
+		} catch {
+			console.warn("(1) Failed to retrieve previous scores");
+			return { score: 0, scoreAI: 0 };
+		}
+	}
+
+	function toggleLeaderboards() {
+		setShowLeaderboards(!showLeaderboards);
+	}
+
+	async function loadLeaderboards() {
+		toggleLeaderboards();
+
+		let newState = [];
+
+		try {
+			const snapshot = await readFromDb("leaderboards");
+			snapshot.docs.forEach((doc) => {
+				newState.push(doc);
+			});
+			setSavedDocs(newState);
+		} catch {
+			console.warn("Leaderboards failed to load");
+			return;
+		}
 	}
 
 	function toggleLogin() {
@@ -73,8 +136,7 @@ export function AuthContextProvider({ children }) {
 
 	async function handleSubmit(e, btnAction) {
 		e.preventDefault();
-		let humanPlayer;
-		let playerAI;
+		let humanPlayer, playerAI;
 		let newPlayers;
 
 		switch (btnAction) {
@@ -95,10 +157,8 @@ export function AuthContextProvider({ children }) {
 				try {
 					setLoadingRequest(true);
 					await signup(emailInput, passwordInput);
-				} catch {
-					alert(
-						"Failed to create an account, email invalid or already in use... Try again"
-					);
+				} catch (error) {
+					alert(error.message);
 					setLoadingRequest(false);
 					return;
 				}
@@ -112,14 +172,17 @@ export function AuthContextProvider({ children }) {
 
 				newPlayers = { humanPlayer, playerAI };
 				setPlayersCtx(newPlayers);
+
+				createUserDoc(emailInput, emailInput);
+
 				break;
 
 			case "login":
 				try {
 					setLoadingRequest(true);
 					await login(emailInput, passwordInput);
-				} catch {
-					alert("Failed to sign in... Try again");
+				} catch (error) {
+					alert(error.message);
 					setLoadingRequest(false);
 					return;
 				}
@@ -132,13 +195,23 @@ export function AuthContextProvider({ children }) {
 				playerAI = playerFactory("AI");
 
 				newPlayers = { humanPlayer, playerAI };
-				setPlayersCtx(newPlayers);
+
+				try {
+					const objResponse = await getPreviousScores(emailInput);
+					humanPlayer.setScore(objResponse.score);
+					playerAI.setScore(objResponse.scoreAI);
+					setPlayersCtx(newPlayers);
+				} catch {
+					console.warn("(2) Failed to retrieve scores");
+				}
+
 				break;
 
 			case "anonymous":
 				toggleModal();
 				setShowPage(true);
 				setCurrentUser({});
+				setEmailInput("");
 
 				humanPlayer = playerFactory("Player");
 				playerAI = playerFactory("AI");
@@ -153,15 +226,30 @@ export function AuthContextProvider({ children }) {
 					await resetPassword(emailInput);
 					alert("Check your inbox for further instructions");
 				} catch {
-					alert("Failed to send reset password email... Try again");
+					alert("Failed to send email");
 				}
 
 				setLoadingRequest(false);
 				break;
 
 			default:
-				console.alert("Something went wrong. Refresh the page!");
+				console.warn("Something went wrong. Refresh the page!");
 				break;
+		}
+	}
+
+	async function createUserDoc(userid, email) {
+		const nickname = email.slice(0, email.indexOf("@"));
+
+		try {
+			await writeToDb(userid, {
+				nickname: nickname,
+				email: email,
+				score: 0,
+				scoreAI: 0,
+			});
+		} catch {
+			console.warn("Failed to add reference to database");
 		}
 	}
 
@@ -182,33 +270,40 @@ export function AuthContextProvider({ children }) {
 
 		return true;
 	}
+
 	return (
 		<AuthRulesContext.Provider
 			value={{
+				emailInput,
 				setEmailInput,
+				passwordInput,
 				setPasswordInput,
+				confirmPasswordInput,
 				setConfirmPasswordInput,
+				passwordReset,
 				togglePasswordReset,
+				showModal,
+				toggleModal,
+				hasAccount,
+				toggleLogin,
+				playersCtx,
+				setPlayersCtx,
+				showPage,
+				currentUser,
+				loadingRequest,
 				handleSubmit,
 				handleModalInputChange,
 				handleLogout,
-				toggleModal,
-				toggleLogin,
-				passwordReset,
-				hasAccount,
-				currentUser,
-				loadingRequest,
-				showModal,
-				showPage,
-				emailInput,
-				passwordInput,
-				confirmPasswordInput,
-				playersCtx,
+				toggleLeaderboards,
+				loadLeaderboards,
+				saveScores,
+				savedDocs,
 			}}
 		>
 			{/* Don't render the app until the current user is set (loadingUser is false) */}
 			{!loadingUser && children}
 			{showModal && <PlayerModal />}
+			{showLeaderboards && <LeaderboardsModal />}
 		</AuthRulesContext.Provider>
 	);
 }

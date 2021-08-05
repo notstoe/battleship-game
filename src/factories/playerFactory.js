@@ -14,6 +14,10 @@ export default function playerFactory(name) {
 		return score;
 	}
 
+	function setScore(num) {
+		return (score = num);
+	}
+
 	function incrementScore() {
 		score++;
 	}
@@ -22,5 +26,5 @@ export default function playerFactory(name) {
 		score = 0;
 	}
 
-	return { getName, getScore, incrementScore, setName, resetScore };
+	return { getName, getScore, incrementScore, setName, setScore, resetScore };
 }

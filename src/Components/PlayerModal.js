@@ -109,7 +109,6 @@ const AuthBtnsContainer = styled.div`
 		}
 
 		:active {
-			/* box-shadow: 0px 0px 10px 3px rgba(0, 0, 0, 0.4); */
 			border: 1px inset var(--highlight-yellow);
 			transform: scale(0.97);
 		}
@@ -280,7 +279,7 @@ export default function PlayerModal() {
 							onClick={(event) => handleSubmit(event, "resetPassword")}
 							style={{ gridRow: "1", gridColumn: "1/3" }}
 						>
-							Send reset email
+							Reset Password
 						</button>
 						<button
 							className="toggleLoginBtn"

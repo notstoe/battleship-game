@@ -8,15 +8,19 @@ import React, {
 import GameOverModal from "../Components/GameOverModal";
 import gameBoard from "../factories/gameBoard";
 
+import { AuthRulesContext } from "./AuthContext";
+
 import Ship from "../factories/ship";
 
 import { getRandomInt, getRandomXorY } from "../supportFunctions/getRandomInt";
-import { AuthRulesContext } from "./AuthContext";
+import isEmpty from "../supportFunctions/isEmpty";
 
 export const GameRulesContext = createContext({});
 
 export function GameRulesProvider({ children }) {
-	const { playersCtx, setPlayersCtx } = useContext(AuthRulesContext);
+	const { playersCtx, setPlayersCtx, saveScores, currentUser } = useContext(
+		AuthRulesContext
+	);
 
 	const boardFunctionsHuman = useRef(gameBoard()); //useRef to prevent variable being re-defined everytime component re-renders
 	const [stateBoardHuman, setStateBoardHuman] = useState(
@@ -304,21 +308,22 @@ export function GameRulesProvider({ children }) {
 	useEffect(() => {
 		if (shipsLeftAI === 0) {
 			setIsGameOver(true);
-			setRoundWinner(playersCtx.human.getName());
+			setRoundWinner("You");
 
-			let newPlayersState = { ...playersCtx };
-			newPlayersState.human.incrementScore();
+			const newPlayersState = { ...playersCtx };
+			newPlayersState.humanPlayer.incrementScore();
 
 			setPlayersCtx(newPlayersState);
-		}
-		if (shipsLeftHuman === 0) {
+			if (!isEmpty(currentUser)) saveScores();
+		} else if (shipsLeftHuman === 0) {
 			setIsGameOver(true);
 			setRoundWinner(playersCtx.playerAI.getName());
 
-			let newPlayersState = { ...playersCtx };
+			const newPlayersState = { ...playersCtx };
 			newPlayersState.playerAI.incrementScore();
 
 			setPlayersCtx(newPlayersState);
+			if (!isEmpty(currentUser)) saveScores();
 		}
 	}, [shipsLeftAI, shipsLeftHuman]);
 
