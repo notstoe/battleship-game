@@ -126,7 +126,7 @@ export default function LeaderboardsModal() {
 		return (
 			<div key={index} className="individualScore">
 				<span>
-					{doc.data().nickname}'s Score': {doc.data().score}
+					{doc.data().nickname}'s Wins: {doc.data().score}
 				</span>
 				<span>AI: {doc.data().scoreAI}</span>
 			</div>
