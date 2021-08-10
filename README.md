@@ -2,7 +2,7 @@
 
 Static webpage using the ReactJS 17 Framework, Test Driven Development (TDD) and Back-end as a Service (Firebase)
 
-> See it live on [notstoe.github.io/battleship](https://notstoe.github.io/battleship)
+> See it live on [notstoe.github.io/battleship-game](https://notstoe.github.io/battleship-game)
 
 # objectives
 
