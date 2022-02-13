@@ -1,8 +1,8 @@
-import React, { useContext } from "react";
-import { AuthRulesContext } from "../contexts/AuthContext";
+import React, { useContext } from 'react';
+import { AuthRulesContext } from '../contexts/AuthContext';
 
-import styled from "styled-components";
-import { motion } from "framer-motion";
+import styled from 'styled-components';
+import { motion } from 'framer-motion';
 
 const Overlay = styled(motion.div)`
 	background: rgba(0, 0, 0, 0.6);
@@ -150,46 +150,46 @@ export default function PlayerModal() {
 
 	const loginForm = () => {
 		return (
-			<Overlay variants={overlayVariants} initial="hidden" animate="visible">
-				<motion.form variants={modalVariants} style={{ height: "34rem" }}>
-					<label htmlFor="email">Email:</label>
+			<Overlay variants={overlayVariants} initial='hidden' animate='visible'>
+				<motion.form variants={modalVariants} style={{ height: '34rem' }}>
+					<label htmlFor='email'>Email:</label>
 					<input
-						name="email"
-						type="text"
+						name='email'
+						type='text'
 						value={emailInput}
-						onChange={(event) => handleModalInputChange(event, "email")}
+						onChange={(event) => handleModalInputChange(event, 'email')}
 					/>
-					<label htmlFor="password">Password:</label>
+					<label htmlFor='password'>Password:</label>
 					<input
-						name="password"
-						type="password"
+						name='password'
+						type='password'
 						value={passwordInput}
-						onChange={(event) => handleModalInputChange(event, "password")}
+						onChange={(event) => handleModalInputChange(event, 'password')}
 					/>
 					<AuthBtnsContainer>
 						<button
-							type="submit"
+							type='submit'
 							disabled={loadingRequest}
-							onClick={(event) => handleSubmit(event, "login")}
+							onClick={(event) => handleSubmit(event, 'login')}
 						>
 							Log-in
 						</button>
 						<button
-							type="button"
-							onClick={(event) => handleSubmit(event, "anonymous")}
+							type='button'
+							onClick={(event) => handleSubmit(event, 'anonymous')}
 						>
 							Anonymous
 						</button>
 						<button
-							className="forgotPasswordBtn"
-							type="button"
+							className='forgotPasswordBtn'
+							type='button'
 							onClick={togglePasswordReset}
 						>
 							I forgot my password!
 						</button>
 						<button
-							className="toggleSignUpBtn"
-							type="button"
+							className='toggleSignUpBtn'
+							type='button'
 							onClick={toggleLogin}
 						>
 							Need an account?
@@ -202,48 +202,48 @@ export default function PlayerModal() {
 
 	const signupForm = () => {
 		return (
-			<Overlay variants={overlayVariants} initial="hidden" animate="visible">
+			<Overlay variants={overlayVariants} initial='hidden' animate='visible'>
 				<motion.form variants={modalVariants}>
-					<label htmlFor="email">Email:</label>
+					<label htmlFor='email'>Email:</label>
 					<input
-						name="email"
-						type="text"
+						name='email'
+						type='text'
 						value={emailInput}
-						onChange={(event) => handleModalInputChange(event, "email")}
+						onChange={(event) => handleModalInputChange(event, 'email')}
 					/>
-					<label htmlFor="password">Password:</label>
+					<label htmlFor='password'>Password:</label>
 					<input
-						name="password"
-						type="password"
+						name='password'
+						type='password'
 						value={passwordInput}
-						onChange={(event) => handleModalInputChange(event, "password")}
+						onChange={(event) => handleModalInputChange(event, 'password')}
 					/>
-					<label htmlFor="confirmPassword">Confirm Password:</label>
+					<label htmlFor='confirmPassword'>Confirm Password:</label>
 					<input
-						name="confirmPassword"
-						type="password"
+						name='confirmPassword'
+						type='password'
 						value={confirmPasswordInput}
 						onChange={(event) =>
-							handleModalInputChange(event, "confirmPassword")
+							handleModalInputChange(event, 'confirmPassword')
 						}
 					/>
 					<AuthBtnsContainer>
 						<button
-							type="submit"
+							type='submit'
 							disabled={loadingRequest}
-							onClick={(event) => handleSubmit(event, "register")}
+							onClick={(event) => handleSubmit(event, 'register')}
 						>
 							Register
 						</button>
 						<button
-							type="button"
-							onClick={(event) => handleSubmit(event, "anonymous")}
+							type='button'
+							onClick={(event) => handleSubmit(event, 'anonymous')}
 						>
 							Anonymous
 						</button>
 						<button
-							className="toggleLoginBtn"
-							type="button"
+							className='toggleLoginBtn'
+							type='button'
 							onClick={toggleLogin}
 						>
 							Already have an account?
@@ -256,34 +256,34 @@ export default function PlayerModal() {
 
 	const passwordResetForm = () => {
 		return (
-			<Overlay variants={overlayVariants} initial="hidden" animate="visible">
+			<Overlay variants={overlayVariants} initial='hidden' animate='visible'>
 				<motion.form
 					variants={modalVariants}
 					style={{
-						height: "20rem",
-						maxWidth: "420px",
-						justifyContent: "space-between",
+						height: '20rem',
+						maxWidth: '420px',
+						justifyContent: 'space-between',
 					}}
 				>
-					<label htmlFor="email">Email used:</label>
+					<label htmlFor='email'>Email used:</label>
 					<input
-						name="email"
-						type="text"
+						name='email'
+						type='text'
 						value={emailInput}
-						onChange={(event) => handleModalInputChange(event, "email")}
+						onChange={(event) => handleModalInputChange(event, 'email')}
 					/>
 					<AuthBtnsContainer>
 						<button
-							type="submit"
+							type='submit'
 							disabled={loadingRequest}
-							onClick={(event) => handleSubmit(event, "resetPassword")}
-							style={{ gridRow: "1", gridColumn: "1/3" }}
+							onClick={(event) => handleSubmit(event, 'resetPassword')}
+							style={{ gridRow: '1', gridColumn: '1/3' }}
 						>
 							Reset Password
 						</button>
 						<button
-							className="toggleLoginBtn"
-							type="button"
+							className='toggleLoginBtn'
+							type='button'
 							onClick={togglePasswordReset}
 						>
 							Go back to Log-in
@@ -294,9 +294,9 @@ export default function PlayerModal() {
 		);
 	};
 
-	return passwordReset
-		? passwordResetForm()
-		: hasAccount
-		? loginForm()
-		: signupForm();
+	function setForm(accountExists) {
+		return accountExists ? loginForm() : signupForm();
+	}
+
+	return passwordReset ? passwordResetForm() : setForm(hasAccount);
 }
