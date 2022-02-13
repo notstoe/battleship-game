@@ -4,16 +4,16 @@ import React, {
 	useEffect,
 	useRef,
 	useState,
-} from "react";
-import GameOverModal from "../Components/GameOverModal";
-import gameBoard from "../factories/gameBoard";
+} from 'react';
+import GameOverModal from '../Components/GameOverModal';
+import gameBoard from '../factories/gameBoard';
 
-import { AuthRulesContext } from "./AuthContext";
+import { AuthRulesContext } from './AuthContext';
 
-import Ship from "../factories/ship";
+import Ship from '../factories/ship';
 
-import { getRandomInt, getRandomXorY } from "../supportFunctions/getRandomInt";
-import isEmpty from "../supportFunctions/isEmpty";
+import { getRandomInt, getRandomXorY } from '../supportFunctions/getRandomInt';
+import isEmpty from '../supportFunctions/isEmpty';
 
 export const GameRulesContext = createContext({});
 
@@ -43,15 +43,15 @@ export function GameRulesProvider({ children }) {
 	const [shipsLeftHuman, setShipsLeftHuman] = useState(5);
 
 	const [isGameOver, setIsGameOver] = useState(false);
-	const [roundWinner, setRoundWinner] = useState("");
+	const [roundWinner, setRoundWinner] = useState('');
 
 	const [counter, setCounter] = useState(0);
-	const [display, setDisplay] = useState("");
+	const [display, setDisplay] = useState('');
 
-	const [orientation, setOrientation] = useState("x");
+	const [orientation, setOrientation] = useState('x');
 
 	function handleOrientationBtnClick() {
-		orientation === "x" ? setOrientation("y") : setOrientation("x");
+		orientation === 'x' ? setOrientation('y') : setOrientation('x');
 	}
 
 	function resetGame() {
@@ -65,12 +65,12 @@ export function GameRulesProvider({ children }) {
 		shipsAI.current = [Ship(1), Ship(2), Ship(3), Ship(4), Ship(5)];
 
 		setCounter(0);
-		setDisplay("");
+		setDisplay('');
 		setShotAllowed(true);
 		setShipsLeftAI(5);
 		setShipsLeftHuman(5);
 		setIsGameOver(false);
-		setRoundWinner("");
+		setRoundWinner('');
 		setMemoryAI({});
 	}
 
@@ -86,7 +86,7 @@ export function GameRulesProvider({ children }) {
 	function handleBoardClick(boardOwner, rowIndex, colIndex) {
 		//SHIPS PLACEMENT
 		if (counter < 5) {
-			if (boardOwner === "AI") return;
+			if (boardOwner === 'AI') return;
 
 			const addShipReturn = boardFunctionsHuman.current.addShip(
 				rowIndex,
@@ -123,7 +123,7 @@ export function GameRulesProvider({ children }) {
 		} else {
 			//TAKING SHOTS, GAME START
 
-			if (boardOwner !== "AI" || !shotAllowed) return;
+			if (boardOwner !== 'AI' || !shotAllowed) return;
 
 			//HUMAN SHOT
 			const shotInfoHuman = boardFunctionsAI.current.makeShot(
@@ -134,8 +134,8 @@ export function GameRulesProvider({ children }) {
 			if (shotInfoHuman === null) return;
 			setShotAllowed(false); //controlling against spamming shots
 
-			if (shotInfoHuman === "water") {
-				setDisplay("Water! Your aim was off on that one.");
+			if (shotInfoHuman === 'water') {
+				setDisplay('Water! Your aim was off on that one.');
 			} else {
 				setDisplay("That's a direct hit. Good job!");
 
@@ -159,9 +159,9 @@ export function GameRulesProvider({ children }) {
 			let stopLoop = false;
 			let counter = 0;
 
-			setTimeout(() => setDisplay("Calculating next shot..."), 1200);
+			setTimeout(() => setDisplay('Calculating next shot...'), 1200);
 			setTimeout(() => {
-				if ("hitWaterColPlus" in memoryAI && !memoryAI.hitWaterColPlus) {
+				if ('hitWaterColPlus' in memoryAI && !memoryAI.hitWaterColPlus) {
 					while (!stopLoop) {
 						counter++;
 						coordsAIShot = { row: memoryAI.row, col: memoryAI.col + counter };
@@ -172,12 +172,12 @@ export function GameRulesProvider({ children }) {
 						);
 						if (shotInfoAI || counter > 8) stopLoop = true;
 
-						if (shotInfoAI === "water" || !shotInfoAI) {
+						if (shotInfoAI === 'water' || !shotInfoAI) {
 							setMemoryAI({ ...memoryAI, hitWaterColPlus: true });
 						}
 					}
 				}
-				if ("hitWaterColMinus" in memoryAI && !memoryAI.hitWaterColMinus) {
+				if ('hitWaterColMinus' in memoryAI && !memoryAI.hitWaterColMinus) {
 					if (!shotInfoAI) {
 						stopLoop = false;
 						counter = 0;
@@ -195,13 +195,13 @@ export function GameRulesProvider({ children }) {
 
 							if (shotInfoAI || counter > 8) stopLoop = true;
 
-							if (shotInfoAI === "water" || !shotInfoAI) {
+							if (shotInfoAI === 'water' || !shotInfoAI) {
 								setMemoryAI({ ...memoryAI, hitWaterColMinus: true });
 							}
 						}
 					}
 				}
-				if ("hitWaterRowPlus" in memoryAI && !memoryAI.hitWaterRowPlus) {
+				if ('hitWaterRowPlus' in memoryAI && !memoryAI.hitWaterRowPlus) {
 					// if both col changes are invalid, try rows
 					if (!shotInfoAI) {
 						stopLoop = false;
@@ -215,13 +215,13 @@ export function GameRulesProvider({ children }) {
 							);
 							if (shotInfoAI || counter > 8) stopLoop = true;
 
-							if (shotInfoAI === "water" || !shotInfoAI) {
+							if (shotInfoAI === 'water' || !shotInfoAI) {
 								setMemoryAI({ ...memoryAI, hitWaterRowPlus: true });
 							}
 						}
 					}
 				}
-				if ("hitWaterRowMinus" in memoryAI && !memoryAI.hitWaterRowMinus) {
+				if ('hitWaterRowMinus' in memoryAI && !memoryAI.hitWaterRowMinus) {
 					if (!shotInfoAI) {
 						stopLoop = false;
 						counter = 0;
@@ -234,7 +234,7 @@ export function GameRulesProvider({ children }) {
 							);
 							if (shotInfoAI || counter > 8) stopLoop = true;
 
-							if (shotInfoAI === "water" || !shotInfoAI) {
+							if (shotInfoAI === 'water' || !shotInfoAI) {
 								setMemoryAI({ ...memoryAI, hitWaterRowMinus: true });
 							}
 						}
@@ -249,13 +249,13 @@ export function GameRulesProvider({ children }) {
 						coordsAIShot.col
 					);
 
-					if (shotInfoAI === "water") {
+					if (shotInfoAI === 'water') {
 						setMemoryAI({});
 					}
 				}
 
-				if (shotInfoAI === "water") {
-					setDisplay("You dodged that one. Water!");
+				if (shotInfoAI === 'water') {
+					setDisplay('You dodged that one. Water!');
 				} else {
 					setDisplay("Ouch. That's a hit!");
 
@@ -308,7 +308,7 @@ export function GameRulesProvider({ children }) {
 	useEffect(() => {
 		if (shipsLeftAI === 0) {
 			setIsGameOver(true);
-			setRoundWinner("You");
+			setRoundWinner('You');
 
 			const newPlayersState = { ...playersCtx };
 			newPlayersState.humanPlayer.incrementScore();
@@ -341,6 +341,7 @@ export function GameRulesProvider({ children }) {
 				counter,
 				display,
 				roundWinner,
+				orientation,
 			}}
 		>
 			{children}
